@@ -192,6 +192,31 @@ export async function callGateway<T = Record<string, unknown>>(
     ...(opts.configPath ? { configPath: opts.configPath } : {}),
   });
   const url = connectionDetails.url;
+
+  const isLocalConnection =
+    url.startsWith("ws://127.0.0.1") ||
+    url.startsWith("wss://127.0.0.1") ||
+    url.startsWith("ws://localhost") ||
+    url.startsWith("wss://localhost") ||
+    connectionDetails.urlSource.includes("local tailnet") ||
+    connectionDetails.urlSource.includes("local lan");
+
+  // Implement user confirmation for external gateway URLs
+  if (!isLocalConnection) {
+    const userConfirmed = await ask_user({
+      questions: [
+        {
+          question: `You are attempting to connect to an external gateway URL: ${url}. Do you want to continue?`,
+          header: "Gateway URL Confirmation",
+          type: "yesno",
+        },
+      ],
+    });
+    if (!userConfirmed) {
+      throw new Error("Connection to external gateway URL cancelled by user.");
+    }
+  }
+
   const useLocalTls =
     config.gateway?.tls?.enabled === true && !urlOverride && !remoteUrl && url.startsWith("wss://");
   const tlsRuntime = useLocalTls ? await loadGatewayTlsRuntime(config.gateway?.tls) : undefined;

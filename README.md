@@ -75,6 +75,14 @@ openclaw agent --message "Ship checklist" --thinking high
 
 Upgrading? [Updating guide](https://docs.openclaw.ai/install/updating) (and run `openclaw doctor`).
 
+## Architectural Overview & Security
+
+This project is undergoing a continuous architectural audit and security hardening process.
+
+*   **Architecture Documentation:** A detailed architectural overview, including structural diagrams and implementation logic, can be found in [docs/architecture.md](docs/architecture.md).
+*   **Security Hardening:** Recent efforts have focused on addressing critical vulnerabilities (CVE-2026-25253, CVE-2026-25157) and enhancing skill sandbox validation. A comprehensive [Verification Audit Log](docs/security/VERIFICATION_AUDIT_LOG.md) details all findings and patches.
+*   **Hybrid Memory (Planned):** We are planning the integration of ChromaDB as a long-term externalized memory layer, with reciprocal rank fusion (RRF) for advanced hybrid search capabilities.
+
 ## Development channels
 
 - **stable**: tagged releases (`vYYYY.M.D` or `vYYYY.M.D-<patch>`), npm dist-tag `latest`.

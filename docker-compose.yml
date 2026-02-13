@@ -44,3 +44,13 @@ services:
     tty: true
     init: true
     entrypoint: ["node", "dist/index.js"]
+
+  chromadb:
+    image: chromadb/chroma:1.5.0
+    volumes:
+      - chromadb_data:/chroma
+    ports:
+      - "8000:8000"
+
+volumes:
+  chromadb_data: {}
