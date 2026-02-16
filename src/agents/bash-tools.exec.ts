@@ -194,6 +194,9 @@ export type ExecElevatedDefaults = {
 
 const execSchema = Type.Object({
   command: Type.String({ description: "Shell command to execute" }),
+  argv: Type.Optional(
+    Type.Array(Type.String(), { description: "Command and arguments as a string array" }),
+  ),
   workdir: Type.Optional(Type.String({ description: "Working directory (defaults to cwd)" })),
   env: Type.Optional(Type.Record(Type.String(), Type.String())),
   yieldMs: Type.Optional(
@@ -418,8 +421,43 @@ function emitExecSystemEvent(text: string, opts: { sessionKey?: string; contextK
   requestHeartbeatNow({ reason: "exec-event" });
 }
 
+const SANDBOX_COMMAND_ALLOWLIST = new Set([
+  "ls",
+  "cat",
+  "echo",
+  "pwd",
+  "grep",
+  "node",
+  "npm",
+  "pnpm",
+  "python",
+  "pip",
+  "git",
+  "python3",
+  "pip3",
+  "test",
+  "find",
+  "rm",
+  "mkdir",
+  "touch",
+]);
+
+function validateSandboxExec(argv: string[]) {
+  if (!argv || argv.length === 0) {
+    throw new Error("Sandbox exec requires 'argv' parameter with at least one argument.");
+  }
+  const command = argv[0];
+  if (path.isAbsolute(command)) {
+    throw new Error(`Sandbox exec does not allow absolute paths. Got "${command}".`);
+  }
+  if (!SANDBOX_COMMAND_ALLOWLIST.has(command)) {
+    throw new Error(`Command "${command}" is not on the sandbox allowlist.`);
+  }
+}
+
 async function runExecProcess(opts: {
   command: string;
+  argv: string[] | undefined;
   workdir: string;
   env: Record<string, string>;
   sandbox?: BashSandboxConfig;
@@ -441,12 +479,15 @@ async function runExecProcess(opts: {
   let stdin: SessionStdin | undefined;
 
   if (opts.sandbox) {
+    if (!opts.argv) {
+      throw new Error("Sandbox execution requires argv.");
+    }
     const { child: spawned } = await spawnWithFallback({
       argv: [
         "docker",
         ...buildDockerExecArgs({
           containerName: opts.sandbox.containerName,
-          command: opts.command,
+          commandArgv: opts.argv,
           workdir: opts.containerWorkdir ?? opts.sandbox.containerWorkdir,
           env: opts.env,
           tty: opts.usePty,
@@ -832,6 +873,7 @@ export function createExecTool(
     execute: async (_toolCallId, args, signal, onUpdate) => {
       const params = args as {
         command: string;
+        argv?: string[];
         workdir?: string;
         env?: Record<string, string>;
         yieldMs?: number;
@@ -844,10 +886,6 @@ export function createExecTool(
         ask?: string;
         node?: string;
       };
-
-      if (!params.command) {
-        throw new Error("Provide a command to start.");
-      }
 
       const maxOutput = DEFAULT_MAX_OUTPUT;
       const pendingMaxOutput = DEFAULT_PENDING_MAX_OUTPUT;
@@ -923,9 +961,7 @@ export function createExecTool(
           );
         }
       }
-      if (elevatedRequested) {
-        logInfo(`exec: elevated command ${truncateMiddle(params.command, 120)}`);
-      }
+
       const configuredHost = defaults?.host ?? "sandbox";
       const requestedHost = normalizeExecHost(params.host) ?? null;
       let host: ExecHost = requestedHost ?? configuredHost;
@@ -937,6 +973,9 @@ export function createExecTool(
       }
       if (elevatedRequested) {
         host = "gateway";
+        if (params.command) {
+          logInfo(`exec: elevated command ${truncateMiddle(params.command, 120)}`);
+        }
       }
 
       const configuredSecurity = defaults?.security ?? (host === "sandbox" ? "deny" : "allowlist");
@@ -954,6 +993,27 @@ export function createExecTool(
       }
 
       const sandbox = host === "sandbox" ? defaults?.sandbox : undefined;
+
+      let command: string;
+      let commandArgv: string[] | undefined;
+
+      if (sandbox) {
+        if (!params.argv || params.argv.length === 0) {
+          throw new Error(
+            "Sandbox exec requires the 'argv' parameter (a string array) and it cannot be empty.",
+          );
+        }
+        validateSandboxExec(params.argv);
+        commandArgv = params.argv;
+        command = params.argv.join(" ");
+      } else {
+        if (!params.command) {
+          throw new Error("Provide a command to start.");
+        }
+        command = params.command;
+        commandArgv = undefined;
+      }
+
       const rawWorkdir = params.workdir?.trim() || defaults?.cwd || process.cwd();
       let workdir = rawWorkdir;
       let containerWorkdir = sandbox?.containerWorkdir;
@@ -971,8 +1031,6 @@ export function createExecTool(
 
       const baseEnv = coerceEnv(process.env);
 
-      // Logic: Sandbox gets raw env. Host (gateway/node) must pass validation.
-      // We validate BEFORE merging to prevent any dangerous vars from entering the stream.
       if (host !== "sandbox" && params.env) {
         validateHostEnv(params.env);
       }
@@ -1038,7 +1096,7 @@ export function createExecTool(
             "exec host=node requires a node that supports system.run (companion app or node host).",
           );
         }
-        const argv = buildNodeShellCommand(params.command, nodeInfo?.platform);
+        const nodeArgv = buildNodeShellCommand(command, nodeInfo?.platform);
 
         const nodeEnv = params.env ? { ...params.env } : undefined;
 
@@ -1046,7 +1104,7 @@ export function createExecTool(
           applyPathPrepend(nodeEnv, defaultPathPrepend, { requireExisting: true });
         }
         const baseAllowlistEval = evaluateShellAllowlist({
-          command: params.command,
+          command,
           allowlist: [],
           safeBins: new Set(),
           cwd: workdir,
@@ -1074,7 +1132,7 @@ export function createExecTool(
               });
               // Allowlist-only precheck; safe bins are node-local and may diverge.
               const allowlistEval = evaluateShellAllowlist({
-                command: params.command,
+                command,
                 allowlist: resolved.allowlist,
                 safeBins: new Set(),
                 cwd: workdir,
@@ -1094,7 +1152,7 @@ export function createExecTool(
           analysisOk,
           allowlistSatisfied,
         });
-        const commandText = params.command;
+        const commandText = command;
         const invokeTimeoutMs = Math.max(
           10_000,
           (typeof params.timeout === "number" ? params.timeout : defaultTimeoutSec) * 1000 + 5_000,
@@ -1108,8 +1166,8 @@ export function createExecTool(
             nodeId,
             command: "system.run",
             params: {
-              command: argv,
-              rawCommand: params.command,
+              command: nodeArgv,
+              rawCommand: command,
               cwd: workdir,
               env: nodeEnv,
               timeoutMs: typeof params.timeout === "number" ? params.timeout * 1000 : undefined,
@@ -1284,7 +1342,7 @@ export function createExecTool(
           throw new Error("exec denied: host=gateway security=deny");
         }
         const allowlistEval = evaluateShellAllowlist({
-          command: params.command,
+          command,
           allowlist: approvals.allowlist,
           safeBins,
           cwd: workdir,
@@ -1309,7 +1367,7 @@ export function createExecTool(
           const contextKey = `exec:${approvalId}`;
           const resolvedPath = allowlistEval.segments[0]?.resolution?.resolvedPath;
           const noticeSeconds = Math.max(1, Math.round(approvalRunningNoticeMs / 1000));
-          const commandText = params.command;
+          const commandText = command;
           const effectiveTimeout =
             typeof params.timeout === "number" ? params.timeout : defaultTimeoutSec;
           const warningText = warnings.length ? `${warnings.join("\n")}\n\n` : "";
@@ -1414,6 +1472,7 @@ export function createExecTool(
             try {
               run = await runExecProcess({
                 command: commandText,
+                argv: undefined,
                 workdir,
                 env,
                 sandbox: undefined,
@@ -1476,7 +1535,7 @@ export function createExecTool(
               approvalSlug,
               expiresAtMs,
               host: "gateway",
-              command: params.command,
+              command,
               cwd: workdir,
             },
           };
@@ -1497,7 +1556,7 @@ export function createExecTool(
               approvals.file,
               agentId,
               match,
-              params.command,
+              command,
               allowlistEval.segments[0]?.resolution?.resolvedPath,
             );
           }
@@ -1509,7 +1568,8 @@ export function createExecTool(
       const getWarningText = () => (warnings.length ? `${warnings.join("\n")}\n\n` : "");
       const usePty = params.pty === true && !sandbox;
       const run = await runExecProcess({
-        command: params.command,
+        command,
+        argv: commandArgv,
         workdir,
         env,
         sandbox,

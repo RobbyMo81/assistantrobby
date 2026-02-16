@@ -17,6 +17,7 @@ import {
   resolveAuthStorePathForDisplay,
 } from "./auth-profiles.js";
 import { normalizeProviderId } from "./model-selection.js";
+import { getMountedSecretSync } from "../security/mounted-secrets.js";
 
 export { ensureAuthProfileStore, resolveAuthProfileOrder } from "./auth-profiles.js";
 
@@ -252,7 +253,10 @@ export function resolveEnvApiKey(provider: string): EnvApiKeyResult | null {
   }
 
   if (normalized === "anthropic") {
-    return pick("ANTHROPIC_OAUTH_TOKEN") ?? pick("ANTHROPIC_API_KEY");
+    const fromEnv = pick("ANTHROPIC_OAUTH_TOKEN") ?? pick("ANTHROPIC_API_KEY");
+    if (fromEnv) {
+      return fromEnv;
+    }
   }
 
   if (normalized === "chutes") {
@@ -311,10 +315,30 @@ export function resolveEnvApiKey(provider: string): EnvApiKeyResult | null {
     ollama: "OLLAMA_API_KEY",
   };
   const envVar = envMap[normalized];
-  if (!envVar) {
-    return null;
+  if (envVar) {
+    const fromEnv = pick(envVar);
+    if (fromEnv) {
+      return fromEnv;
+    }
   }
-  return pick(envVar);
+
+  const secretFileMap: Record<string, string> = {
+    openai: "openai_api_key",
+    anthropic: "anthropic_api_key",
+    google: "gemini_api_key",
+  };
+  const secretFileName = secretFileMap[normalized];
+  if (secretFileName) {
+    const fromSecretFile = getMountedSecretSync(secretFileName);
+    if (fromSecretFile) {
+      return {
+        apiKey: fromSecretFile,
+        source: `secret-file:${secretFileName}`,
+      };
+    }
+  }
+
+  return null;
 }
 
 export function resolveModelAuthMode(
