@@ -220,7 +220,7 @@ React in Slack:
 
 ```
 openclaw message react --channel slack \
-  --target C123 --message-id 456 --emoji "✅"
+  --target C123 --message-id 456 --emoji "[OK]"
 ```
 
 React in a Signal group:
@@ -228,7 +228,7 @@ React in a Signal group:
 ```
 openclaw message react --channel signal \
   --target signal:group:abc123 --message-id 1737630212345 \
-  --emoji "✅" --target-author-uuid 123e4567-e89b-12d3-a456-426614174000
+  --emoji "[OK]" --target-author-uuid 123e4567-e89b-12d3-a456-426614174000
 ```
 
 Send Telegram inline buttons:

@@ -29,7 +29,7 @@ const MIN_KEEP_CHARS = 2_000;
  * Suffix appended to truncated tool results.
  */
 const TRUNCATION_SUFFIX =
-  "\n\n⚠️ [Content truncated — original was too large for the model's context window. " +
+  "\n\n[WARN] [Content truncated — original was too large for the model's context window. " +
   "The content above is a partial view. If you need more, request specific sections or use " +
   "offset/limit parameters to read smaller chunks.]";
 

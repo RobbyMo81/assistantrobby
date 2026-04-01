@@ -64,7 +64,7 @@ export const isBunFetchSocketError = (message?: string) =>
 export const formatBunFetchSocketError = (message: string) => {
   const trimmed = message.trim();
   return [
-    "⚠️ LLM connection failed. This could be due to server issues, network problems, or context length exceeded (e.g., with local LLMs like LM Studio). Original error:",
+    "[WARN] LLM connection failed. This could be due to server issues, network problems, or context length exceeded (e.g., with local LLMs like LM Studio). Original error:",
     "```",
     trimmed || "Unknown error",
     "```",

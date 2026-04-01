@@ -359,8 +359,8 @@ openclaw logs --follow | grep "pairing request"
 
 **变通方法：** 在提及时添加一些文字：
 
-- ❌ `@openclaw` + 图片
-- ✅ `@openclaw check this` + 图片
+- [FAIL] `@openclaw` + 图片
+- [OK] `@openclaw check this` + 图片
 
 ### 会话未恢复
 
@@ -727,7 +727,7 @@ openclaw channels login         # 重新配对 WhatsApp
 openclaw gateway restart           # 或：openclaw gateway
 ```
 
-⚠️ 这会丢失所有会话并需要重新配对 WhatsApp。
+[WARN] 这会丢失所有会话并需要重新配对 WhatsApp。
 
 ## 获取帮助
 
@@ -743,7 +743,7 @@ openclaw gateway restart           # 或：openclaw gateway
 
 _"你试过关掉再开吗？"_ — 每个 IT 人员都这么说
 
-🦞🔧
+🔧
 
 ### 浏览器无法启动（Linux）
 

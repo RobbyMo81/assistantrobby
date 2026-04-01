@@ -8,6 +8,7 @@ export type OverviewProps = {
   connected: boolean;
   hello: GatewayHelloOk | null;
   settings: UiSettings;
+  bootstrapToken: string;
   password: string;
   lastError: string | null;
   presenceCount: number;
@@ -16,6 +17,7 @@ export type OverviewProps = {
   cronNext: number | null;
   lastChannelsRefresh: number | null;
   onSettingsChange: (next: UiSettings) => void;
+  onBootstrapTokenChange: (next: string) => void;
   onPasswordChange: (next: string) => void;
   onSessionKeyChange: (next: string) => void;
   onConnect: () => void;
@@ -37,7 +39,7 @@ export function renderOverview(props: OverviewProps) {
     if (!authFailed) {
       return null;
     }
-    const hasToken = Boolean(props.settings.token.trim());
+    const hasToken = Boolean(props.bootstrapToken.trim());
     const hasPassword = Boolean(props.password.trim());
     if (!hasToken && !hasPassword) {
       return html`
@@ -137,15 +139,15 @@ export function renderOverview(props: OverviewProps) {
             />
           </label>
           <label class="field">
-            <span>Gateway Token</span>
-            <input
-              .value=${props.settings.token}
-              @input=${(e: Event) => {
-                const v = (e.target as HTMLInputElement).value;
-                props.onSettingsChange({ ...props.settings, token: v });
-              }}
-              placeholder="OPENCLAW_GATEWAY_TOKEN"
-            />
+              <span>Gateway Token</span>
+              <input
+                .value=${props.bootstrapToken}
+                @input=${(e: Event) => {
+                  const v = (e.target as HTMLInputElement).value;
+                  props.onBootstrapTokenChange(v);
+                }}
+                placeholder="OPENCLAW_GATEWAY_TOKEN"
+              />
           </label>
           <label class="field">
             <span>Password (not stored)</span>

@@ -560,7 +560,7 @@ export function createMSTeamsMessageHandler(deps: MSTeamsMessageHandlerDeps) {
       runtime.error?.(`msteams dispatch failed: ${String(err)}`);
       try {
         await context.sendActivity(
-          `⚠️ Agent failed: ${err instanceof Error ? err.message : String(err)}`,
+          `[WARN] Agent failed: ${err instanceof Error ? err.message : String(err)}`,
         );
       } catch {
         // Best effort.

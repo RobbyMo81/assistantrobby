@@ -37,6 +37,7 @@ import type { SessionLogEntry } from "./views/usage.ts";
 
 export type AppViewState = {
   settings: UiSettings;
+  bootstrapToken: string;
   password: string;
   tab: Tab;
   onboarding: boolean;
@@ -222,6 +223,7 @@ export type AppViewState = {
   client: GatewayBrowserClient | null;
   refreshSessionsAfterChat: Set<string>;
   connect: () => void;
+  logout: () => Promise<void>;
   setTab: (tab: Tab) => void;
   setTheme: (theme: ThemeMode, context?: ThemeTransitionContext) => void;
   applySettings: (next: UiSettings) => void;

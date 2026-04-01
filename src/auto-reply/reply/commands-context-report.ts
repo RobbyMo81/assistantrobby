@@ -185,7 +185,7 @@ export async function buildContextReply(params: HandleCommandsParams): Promise<R
   if (!sub || sub === "help") {
     return {
       text: [
-        "🧠 /context",
+        " /context",
         "",
         "What counts as context (high-level), plus a breakdown mode.",
         "",
@@ -277,7 +277,7 @@ export async function buildContextReply(params: HandleCommandsParams): Promise<R
 
     return {
       text: [
-        "🧠 Context breakdown (detailed)",
+        " Context breakdown (detailed)",
         `Workspace: ${workspaceLabel}`,
         `Bootstrap max/file: ${bootstrapMaxLabel}`,
         sandboxLine,
@@ -314,7 +314,7 @@ export async function buildContextReply(params: HandleCommandsParams): Promise<R
 
   return {
     text: [
-      "🧠 Context breakdown",
+      " Context breakdown",
       `Workspace: ${workspaceLabel}`,
       `Bootstrap max/file: ${bootstrapMaxLabel}`,
       sandboxLine,

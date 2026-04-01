@@ -6,7 +6,7 @@ import { HARD_MAX_TOOL_RESULT_CHARS } from "./pi-embedded-runner/tool-result-tru
 import { makeMissingToolResult, sanitizeToolCallInputs } from "./session-transcript-repair.js";
 
 const GUARD_TRUNCATION_SUFFIX =
-  "\n\n⚠️ [Content truncated during persistence — original exceeded size limit. " +
+  "\n\n[WARN] [Content truncated during persistence — original exceeded size limit. " +
   "Use offset/limit parameters or request specific sections for large content.]";
 
 /**

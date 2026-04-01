@@ -9,7 +9,7 @@ to generate or populate rich user interfaces.
 
 *A gallery of A2UI rendered cards, showing a variety of UI compositions that A2UI can achieve.*
 
-## ⚠️ Status: Early Stage Public Preview
+## [WARN] Status: Early Stage Public Preview
 
 > **Note:** A2UI is currently in **v0.8 (Public Preview)**. The specification and
 implementations are functional but are still evolving. We are opening the project to

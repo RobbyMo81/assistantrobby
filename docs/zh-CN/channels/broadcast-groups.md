@@ -226,8 +226,8 @@ Tools: read only
 }
 ```
 
-✅ **好的做法：** 每个智能体只有一个任务  
-❌ **不好的做法：** 一个通用的"dev-helper"智能体
+[OK] **好的做法：** 每个智能体只有一个任务  
+[FAIL] **不好的做法：** 一个通用的"dev-helper"智能体
 
 ### 2. 使用描述性名称
 
@@ -283,7 +283,7 @@ Result: Agent A and C respond, Agent B logs error
 
 广播群组目前支持：
 
-- ✅ WhatsApp（已实现）
+- [OK] WhatsApp（已实现）
 - 🚧 Telegram（计划中）
 - 🚧 Discord（计划中）
 - 🚧 Slack（计划中）
@@ -383,7 +383,7 @@ tail -f ~/.openclaw/logs/gateway.log | grep broadcast
 **响应：**
 
 - code-formatter："修复了缩进并添加了类型提示"
-- security-scanner："⚠️ 第 12 行存在 SQL 注入漏洞"
+- security-scanner："[WARN] 第 12 行存在 SQL 注入漏洞"
 - test-coverage："覆盖率为 45%，缺少错误情况的测试"
 - docs-checker："函数 `process_data` 缺少文档字符串"
 

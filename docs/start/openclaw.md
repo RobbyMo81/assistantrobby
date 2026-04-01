@@ -10,7 +10,7 @@ title: "Personal Assistant Setup"
 
 OpenClaw is a WhatsApp + Telegram + Discord + iMessage gateway for **Pi** agents. Plugins add Mattermost. This guide is the "personal assistant" setup: one dedicated WhatsApp number that behaves like your always-on agent.
 
-## ⚠️ Safety first
+## [WARN] Safety first
 
 You’re putting an agent in a position to:
 

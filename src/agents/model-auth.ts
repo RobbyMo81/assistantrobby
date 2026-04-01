@@ -4,6 +4,7 @@ import type { OpenClawConfig } from "../config/config.js";
 import type { ModelProviderAuthMode, ModelProviderConfig } from "../config/types.js";
 import { formatCliCommand } from "../cli/command-format.js";
 import { getShellEnvAppliedKeys } from "../infra/shell-env.js";
+import { getMountedSecretSync } from "../security/mounted-secrets.js";
 import {
   normalizeOptionalSecretInput,
   normalizeSecretInput,
@@ -17,7 +18,6 @@ import {
   resolveAuthStorePathForDisplay,
 } from "./auth-profiles.js";
 import { normalizeProviderId } from "./model-selection.js";
-import { getMountedSecretSync } from "../security/mounted-secrets.js";
 
 export { ensureAuthProfileStore, resolveAuthProfileOrder } from "./auth-profiles.js";
 
@@ -25,6 +25,9 @@ const AWS_BEARER_ENV = "AWS_BEARER_TOKEN_BEDROCK";
 const AWS_ACCESS_KEY_ENV = "AWS_ACCESS_KEY_ID";
 const AWS_SECRET_KEY_ENV = "AWS_SECRET_ACCESS_KEY";
 const AWS_PROFILE_ENV = "AWS_PROFILE";
+const PROVIDER_AUTH_MODE_ENV = "OPENCLAW_PROVIDER_AUTH_MODE";
+
+export type ProviderAuthorityMode = "mounted_secret_file" | "service_env";
 
 function resolveProviderConfig(
   cfg: OpenClawConfig | undefined,
@@ -131,6 +134,9 @@ export type ResolvedProviderAuth = {
   profileId?: string;
   source: string;
   mode: "api-key" | "oauth" | "token" | "aws-sdk";
+  authorityMode?: ProviderAuthorityMode;
+  duplicateSourcesDetected?: boolean;
+  migrationMirrorUsed?: boolean;
 };
 
 export async function resolveApiKeyForProvider(params: {
@@ -194,12 +200,15 @@ export async function resolveApiKeyForProvider(params: {
     } catch {}
   }
 
-  const envResolved = resolveEnvApiKey(provider);
+  const envResolved = resolveProviderAuthorityApiKey(provider);
   if (envResolved) {
     return {
       apiKey: envResolved.apiKey,
       source: envResolved.source,
       mode: envResolved.source.includes("OAUTH_TOKEN") ? "oauth" : "api-key",
+      authorityMode: envResolved.authorityMode,
+      duplicateSourcesDetected: envResolved.duplicateSourcesDetected,
+      migrationMirrorUsed: envResolved.migrationMirrorUsed,
     };
   }
 
@@ -234,13 +243,34 @@ export async function resolveApiKeyForProvider(params: {
 }
 
 export type EnvApiKeyResult = { apiKey: string; source: string };
+export type ProviderAuthorityApiKeyResult = EnvApiKeyResult & {
+  authorityMode: ProviderAuthorityMode;
+  duplicateSourcesDetected: boolean;
+  migrationMirrorUsed: boolean;
+};
 export type ModelAuthMode = "api-key" | "oauth" | "token" | "mixed" | "aws-sdk" | "unknown";
 
-export function resolveEnvApiKey(provider: string): EnvApiKeyResult | null {
+export function resolveProviderAuthorityMode(
+  env: NodeJS.ProcessEnv = process.env,
+): ProviderAuthorityMode {
+  const declared = normalizeSecretInput(env[PROVIDER_AUTH_MODE_ENV]).toLowerCase();
+  if (declared === "mounted_secret_file") {
+    return "mounted_secret_file";
+  }
+  if (declared === "service_env") {
+    return "service_env";
+  }
+  return env.OPENCLAW_SECRETS_DIR?.trim() ? "mounted_secret_file" : "service_env";
+}
+
+export function resolveEnvApiKey(
+  provider: string,
+  env: NodeJS.ProcessEnv = process.env,
+): EnvApiKeyResult | null {
   const normalized = normalizeProviderId(provider);
   const applied = new Set(getShellEnvAppliedKeys());
   const pick = (envVar: string): EnvApiKeyResult | null => {
-    const value = normalizeOptionalSecretInput(process.env[envVar]);
+    const value = normalizeOptionalSecretInput(env[envVar]);
     if (!value) {
       return null;
     }
@@ -322,23 +352,56 @@ export function resolveEnvApiKey(provider: string): EnvApiKeyResult | null {
     }
   }
 
+  return null;
+}
+
+export function resolveProviderAuthorityApiKey(
+  provider: string,
+  env: NodeJS.ProcessEnv = process.env,
+): ProviderAuthorityApiKeyResult | null {
+  const authorityMode = resolveProviderAuthorityMode(env);
+  const normalized = normalizeProviderId(provider);
   const secretFileMap: Record<string, string> = {
     openai: "openai_api_key",
     anthropic: "anthropic_api_key",
     google: "gemini_api_key",
   };
   const secretFileName = secretFileMap[normalized];
-  if (secretFileName) {
+
+  if (authorityMode === "mounted_secret_file" && secretFileName) {
     const fromSecretFile = getMountedSecretSync(secretFileName);
+    const fromEnv = resolveEnvApiKey(provider, env);
     if (fromSecretFile) {
       return {
         apiKey: fromSecretFile,
         source: `secret-file:${secretFileName}`,
+        authorityMode,
+        duplicateSourcesDetected: Boolean(fromEnv),
+        migrationMirrorUsed: false,
       };
     }
+    if (fromEnv) {
+      return {
+        ...fromEnv,
+        source: `${fromEnv.source} (migration mirror)`,
+        authorityMode,
+        duplicateSourcesDetected: false,
+        migrationMirrorUsed: true,
+      };
+    }
+    return null;
   }
 
-  return null;
+  const fromEnv = resolveEnvApiKey(provider, env);
+  if (!fromEnv) {
+    return null;
+  }
+  return {
+    ...fromEnv,
+    authorityMode,
+    duplicateSourcesDetected: Boolean(secretFileName && getMountedSecretSync(secretFileName)),
+    migrationMirrorUsed: false,
+  };
 }
 
 export function resolveModelAuthMode(
@@ -385,7 +448,7 @@ export function resolveModelAuthMode(
     return "aws-sdk";
   }
 
-  const envKey = resolveEnvApiKey(resolved);
+  const envKey = resolveProviderAuthorityApiKey(resolved);
   if (envKey?.apiKey) {
     return envKey.source.includes("OAUTH_TOKEN") ? "oauth" : "api-key";
   }

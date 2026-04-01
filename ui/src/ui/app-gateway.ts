@@ -26,10 +26,13 @@ import {
 } from "./controllers/exec-approval.ts";
 import { loadNodes } from "./controllers/nodes.ts";
 import { loadSessions } from "./controllers/sessions.ts";
+import { clearDeviceAuthToken } from "./device-auth.ts";
+import { loadOrCreateDeviceIdentity } from "./device-identity.ts";
 import { GatewayBrowserClient } from "./gateway.ts";
 
 type GatewayHost = {
   settings: UiSettings;
+  bootstrapToken: string;
   password: string;
   client: GatewayBrowserClient | null;
   connected: boolean;
@@ -125,7 +128,11 @@ export function connectGateway(host: GatewayHost) {
   host.client?.stop();
   host.client = new GatewayBrowserClient({
     url: host.settings.gatewayUrl,
-    token: host.settings.token.trim() ? host.settings.token : undefined,
+    token: host.bootstrapToken.trim()
+      ? host.bootstrapToken
+      : host.settings.token.trim()
+        ? host.settings.token
+        : undefined,
     password: host.password.trim() ? host.password : undefined,
     clientName: "openclaw-control-ui",
     mode: "webchat",
@@ -157,8 +164,39 @@ export function connectGateway(host: GatewayHost) {
     onGap: ({ expected, received }) => {
       host.lastError = `event gap detected (expected seq ${expected}, got ${received}); refresh recommended`;
     },
+    onAuthFallback: ({ reason }) => {
+      host.lastError = reason;
+    },
   });
   host.client.start();
+}
+
+export async function logoutGateway(host: GatewayHost) {
+  const role = host.hello?.auth?.role ?? "operator";
+  try {
+    const identity = await loadOrCreateDeviceIdentity();
+    if (host.connected && host.client && host.hello?.auth?.deviceToken) {
+      try {
+        await host.client.request("device.token.revoke", {
+          deviceId: identity.deviceId,
+          role,
+        });
+      } catch {
+        // best-effort revocation; local clear still proceeds
+      }
+    }
+    await clearDeviceAuthToken({ deviceId: identity.deviceId, role });
+  } catch {
+    // best-effort local clear; continue disconnect path
+  }
+
+  host.client?.stop();
+  host.client = null;
+  host.connected = false;
+  host.hello = null;
+  host.lastError = null;
+  host.execApprovalQueue = [];
+  host.execApprovalError = null;
 }
 
 export function handleGatewayEvent(host: GatewayHost, evt: GatewayEventFrame) {

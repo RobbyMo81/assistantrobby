@@ -127,16 +127,16 @@ Multi-account support: use `channels.zalo.accounts` with per-account tokens and 
 
 ## Capabilities
 
-| Feature         | Status                         |
-| --------------- | ------------------------------ |
-| Direct messages | ✅ Supported                   |
-| Groups          | ❌ Coming soon (per Zalo docs) |
-| Media (images)  | ✅ Supported                   |
-| Reactions       | ❌ Not supported               |
-| Threads         | ❌ Not supported               |
-| Polls           | ❌ Not supported               |
-| Native commands | ❌ Not supported               |
-| Streaming       | ⚠️ Blocked (2000 char limit)   |
+| Feature         | Status                             |
+| --------------- | ---------------------------------- |
+| Direct messages | [OK] Supported                     |
+| Groups          | [FAIL] Coming soon (per Zalo docs) |
+| Media (images)  | [OK] Supported                     |
+| Reactions       | [FAIL] Not supported               |
+| Threads         | [FAIL] Not supported               |
+| Polls           | [FAIL] Not supported               |
+| Native commands | [FAIL] Not supported               |
+| Streaming       | [WARN] Blocked (2000 char limit)   |
 
 ## Delivery targets (CLI/cron)
 

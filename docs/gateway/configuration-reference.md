@@ -1183,8 +1183,8 @@ See [Multi-Agent Sandbox & Tools](/tools/multi-agent-sandbox-tools) for preceden
 ```json5
 {
   messages: {
-    responsePrefix: "🦞", // or "auto"
-    ackReaction: "👀",
+    responsePrefix: "", // or "auto"
+    ackReaction: "",
     ackReactionScope: "group-mentions", // group-mentions | group-all | direct | all
     removeAckAfterReply: false,
     queue: {
@@ -1228,7 +1228,7 @@ Variables are case-insensitive. `{think}` is an alias for `{thinkingLevel}`.
 
 ### Ack reaction
 
-- Defaults to active agent's `identity.emoji`, otherwise `"👀"`. Set `""` to disable.
+- Defaults to active agent's `identity.emoji`, otherwise `""`. Set `""` to disable.
 - Scope: `group-mentions` (default), `group-all`, `direct`, `all`.
 - `removeAckAfterReply`: removes ack after reply (Slack/Discord/Telegram/Google Chat only).
 
@@ -2212,7 +2212,7 @@ Metadata written by CLI wizards (`onboard`, `configure`, `doctor`):
 
 Written by the macOS onboarding assistant. Derives defaults:
 
-- `messages.ackReaction` from `identity.emoji` (falls back to 👀)
+- `messages.ackReaction` from `identity.emoji` (falls back to )
 - `mentionPatterns` from `identity.name`/`identity.emoji`
 - `avatar` accepts: workspace-relative path, `http(s)` URL, or `data:` URI
 

@@ -62,4 +62,4 @@ if [[ -n "$STAPLE_APP_PATH" ]]; then
   fi
 fi
 
-echo "✅ Notarization complete"
+echo "[OK] Notarization complete"

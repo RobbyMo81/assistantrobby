@@ -46,7 +46,7 @@
       "detailKeys": ["path"]
     },
     "edit": {
-      "emoji": "📝",
+      "emoji": "",
       "title": "Edit",
       "detailKeys": ["path"]
     },
@@ -277,7 +277,7 @@
       "detailKeys": ["sessionKey", "model"]
     },
     "memory_search": {
-      "emoji": "🧠",
+      "emoji": "",
       "title": "Memory Search",
       "detailKeys": ["query"]
     },

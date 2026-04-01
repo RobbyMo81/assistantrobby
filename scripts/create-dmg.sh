@@ -173,4 +173,4 @@ hdiutil convert "$DMG_RW_PATH" -format ULMO -o "$OUT_PATH" -ov
 rm -f "$DMG_RW_PATH"
 
 hdiutil verify "$OUT_PATH" >/dev/null
-echo "✅ DMG ready: $OUT_PATH"
+echo "[OK] DMG ready: $OUT_PATH"

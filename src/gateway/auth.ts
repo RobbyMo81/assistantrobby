@@ -15,6 +15,9 @@ export type ResolvedGatewayAuth = {
   token?: string;
   password?: string;
   allowTailscale: boolean;
+  tokenSource?: "env" | "config";
+  passwordSource?: "env" | "config";
+  duplicateSourcesDetected: boolean;
 };
 
 export type GatewayAuthResult = {
@@ -189,13 +192,12 @@ export function resolveGatewayAuth(params: {
 }): ResolvedGatewayAuth {
   const authConfig = params.authConfig ?? {};
   const env = params.env ?? process.env;
-  const token =
-    authConfig.token ?? env.OPENCLAW_GATEWAY_TOKEN ?? env.CLAWDBOT_GATEWAY_TOKEN ?? undefined;
-  const password =
-    authConfig.password ??
-    env.OPENCLAW_GATEWAY_PASSWORD ??
-    env.CLAWDBOT_GATEWAY_PASSWORD ??
-    undefined;
+  const envToken = env.OPENCLAW_GATEWAY_TOKEN ?? env.CLAWDBOT_GATEWAY_TOKEN ?? undefined;
+  const configToken = authConfig.token;
+  const token = envToken ?? configToken ?? undefined;
+  const envPassword = env.OPENCLAW_GATEWAY_PASSWORD ?? env.CLAWDBOT_GATEWAY_PASSWORD ?? undefined;
+  const configPassword = authConfig.password;
+  const password = envPassword ?? configPassword ?? undefined;
   const mode: ResolvedGatewayAuth["mode"] = authConfig.mode ?? (password ? "password" : "token");
   const allowTailscale =
     authConfig.allowTailscale ?? (params.tailscaleMode === "serve" && mode !== "password");
@@ -204,6 +206,9 @@ export function resolveGatewayAuth(params: {
     token,
     password,
     allowTailscale,
+    tokenSource: envToken ? "env" : configToken ? "config" : undefined,
+    passwordSource: envPassword ? "env" : configPassword ? "config" : undefined,
+    duplicateSourcesDetected: Boolean((envToken && configToken) || (envPassword && configPassword)),
   };
 }
 

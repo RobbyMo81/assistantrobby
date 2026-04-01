@@ -46,7 +46,7 @@ export async function waitForSlackEvent(name: string) {
 export const defaultSlackTestConfig = () => ({
   messages: {
     responsePrefix: "PFX",
-    ackReaction: "👀",
+    ackReaction: "",
     ackReactionScope: "group-mentions",
   },
   channels: {

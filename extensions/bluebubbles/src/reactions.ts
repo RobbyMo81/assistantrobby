@@ -17,7 +17,7 @@ const REACTION_ALIASES = new Map<string, string>([
   ["heart", "love"],
   ["love", "love"],
   ["❤", "love"],
-  ["❤️", "love"],
+  ["", "love"],
   ["red_heart", "love"],
   ["thumbs_up", "like"],
   ["thumbsup", "like"],
@@ -37,7 +37,7 @@ const REACTION_ALIASES = new Map<string, string>([
   ["lol", "laugh"],
   ["lmao", "laugh"],
   ["rofl", "laugh"],
-  ["😂", "laugh"],
+  ["", "laugh"],
   ["🤣", "laugh"],
   ["xd", "laugh"],
   ["laugh", "laugh"],
@@ -79,7 +79,7 @@ const REACTION_ALIASES = new Map<string, string>([
 
 const REACTION_EMOJIS = new Map<string, string>([
   // Love
-  ["❤️", "love"],
+  ["", "love"],
   ["❤", "love"],
   ["♥️", "love"],
   ["♥", "love"],
@@ -92,7 +92,7 @@ const REACTION_EMOJIS = new Map<string, string>([
   ["👎", "dislike"],
   ["🙅", "dislike"],
   // Laugh
-  ["😂", "laugh"],
+  ["", "laugh"],
   ["🤣", "laugh"],
   ["😆", "laugh"],
   ["😁", "laugh"],

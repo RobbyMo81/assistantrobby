@@ -43,7 +43,7 @@ Hooks (3/3 ready)
 
 Ready:
   🚀 boot-md ✓ - Run BOOT.md on gateway startup
-  📝 command-logger ✓ - Log all command events to a centralized audit file
+   command-logger ✓ - Log all command events to a centralized audit file
   💾 session-memory ✓ - Save session context to memory when /new command is issued
 ```
 
@@ -183,7 +183,7 @@ openclaw hooks disable command-logger
 **输出：**
 
 ```
-⏸ Disabled hook: 📝 command-logger
+⏸ Disabled hook:  command-logger
 ```
 
 **禁用后：**

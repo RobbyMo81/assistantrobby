@@ -252,7 +252,7 @@ export const handleRestartCommand: CommandHandler = async (params, allowTextComm
     return {
       shouldContinue: false,
       reply: {
-        text: "⚠️ /restart is disabled. Set commands.restart=true to enable.",
+        text: "[WARN] /restart is disabled. Set commands.restart=true to enable.",
       },
     };
   }
@@ -272,7 +272,7 @@ export const handleRestartCommand: CommandHandler = async (params, allowTextComm
     return {
       shouldContinue: false,
       reply: {
-        text: `⚠️ Restart failed (${restartMethod.method}).${detail}`,
+        text: `[WARN] Restart failed (${restartMethod.method}).${detail}`,
       },
     };
   }

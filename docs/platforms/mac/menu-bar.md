@@ -34,7 +34,7 @@ title: "Menu Bar"
 - `exec` → 💻
 - `read` → 📄
 - `write` → ✍️
-- `edit` → 📝
+- `edit` →
 - `attach` → 📎
 - default → 🛠️
 

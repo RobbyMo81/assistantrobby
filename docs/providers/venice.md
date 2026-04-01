@@ -34,9 +34,9 @@ Venice offers two privacy levels — understanding this is key to choosing your 
 - **Uncensored models**: Access to models without content restrictions
 - **Major model access**: Use Claude, GPT-5.2, Gemini, Grok via Venice's anonymized proxy
 - **OpenAI-compatible API**: Standard `/v1` endpoints for easy integration
-- **Streaming**: ✅ Supported on all models
-- **Function calling**: ✅ Supported on select models (check model capabilities)
-- **Vision**: ✅ Supported on models with vision capability
+- **Streaming**: [OK] Supported on all models
+- **Function calling**: [OK] Supported on select models (check model capabilities)
+- **Vision**: [OK] Supported on models with vision capability
 - **No hard rate limits**: Fair-use throttling may apply for extreme usage
 
 ## Setup
@@ -168,12 +168,12 @@ The `/models` endpoint is public (no auth needed for listing), but inference req
 
 ## Streaming & Tool Support
 
-| Feature              | Support                                                 |
-| -------------------- | ------------------------------------------------------- |
-| **Streaming**        | ✅ All models                                           |
-| **Function calling** | ✅ Most models (check `supportsFunctionCalling` in API) |
-| **Vision/Images**    | ✅ Models marked with "Vision" feature                  |
-| **JSON mode**        | ✅ Supported via `response_format`                      |
+| Feature              | Support                                                   |
+| -------------------- | --------------------------------------------------------- |
+| **Streaming**        | [OK] All models                                           |
+| **Function calling** | [OK] Most models (check `supportsFunctionCalling` in API) |
+| **Vision/Images**    | [OK] Models marked with "Vision" feature                  |
+| **JSON mode**        | [OK] Supported via `response_format`                      |
 
 ## Pricing
 

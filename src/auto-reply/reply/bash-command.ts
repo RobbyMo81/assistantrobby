@@ -217,7 +217,7 @@ export async function handleBashChatCommand(params: {
 }): Promise<ReplyPayload> {
   if (params.cfg.commands?.bash !== true) {
     return {
-      text: "⚠️ bash is disabled. Set commands.bash=true to enable. Docs: https://docs.openclaw.ai/tools/slash-commands#config",
+      text: "[WARN] bash is disabled. Set commands.bash=true to enable. Docs: https://docs.openclaw.ai/tools/slash-commands#config",
     };
   }
 
@@ -250,7 +250,7 @@ export async function handleBashChatCommand(params: {
   }).trim();
   const request = parseBashRequest(rawBody);
   if (!request) {
-    return { text: "⚠️ Unrecognized bash request." };
+    return { text: "[WARN] Unrecognized bash request." };
   }
 
   const liveJob = ensureActiveJobState();
@@ -285,7 +285,7 @@ export async function handleBashChatCommand(params: {
       const exitLabel = finished.exitSignal
         ? `signal ${String(finished.exitSignal)}`
         : `code ${String(finished.exitCode ?? 0)}`;
-      const prefix = finished.status === "completed" ? "⚙️" : "⚠️";
+      const prefix = finished.status === "completed" ? "⚙️" : "[WARN]";
       return {
         text: [
           `${prefix} bash finished (session ${formatSessionSnippet(sessionId)}).`,
@@ -319,7 +319,7 @@ export async function handleBashChatCommand(params: {
     }
     if (!running.backgrounded) {
       return {
-        text: `⚠️ Session ${formatSessionSnippet(sessionId)} is not backgrounded.`,
+        text: `[WARN] Session ${formatSessionSnippet(sessionId)} is not backgrounded.`,
       };
     }
     const pid = running.pid ?? running.child?.pid;
@@ -340,7 +340,7 @@ export async function handleBashChatCommand(params: {
     const label =
       liveJob.state === "running" ? formatSessionSnippet(liveJob.sessionId) : "starting";
     return {
-      text: `⚠️ A bash job is already running (${label}). Use !poll / !stop (or /bash poll / /bash stop).`,
+      text: `[WARN] A bash job is already running (${label}). Use !poll / !stop (or /bash poll / /bash stop).`,
     };
   }
 
@@ -415,7 +415,7 @@ export async function handleBashChatCommand(params: {
     activeJob = null;
     const message = err instanceof Error ? err.message : String(err);
     return {
-      text: [`⚠️ bash failed: ${commandText}`, formatOutputBlock(message)].join("\n"),
+      text: [`[WARN] bash failed: ${commandText}`, formatOutputBlock(message)].join("\n"),
     };
   }
 }

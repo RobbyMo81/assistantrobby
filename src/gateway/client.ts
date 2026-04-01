@@ -188,8 +188,8 @@ export class GatewayClient {
     const storedToken = this.opts.deviceIdentity
       ? loadDeviceAuthToken({ deviceId: this.opts.deviceIdentity.deviceId, role })?.token
       : null;
-    const authToken = storedToken ?? this.opts.token ?? undefined;
-    const canFallbackToShared = Boolean(storedToken && this.opts.token);
+    const authToken = this.opts.token ?? storedToken ?? undefined;
+    const canFallbackToShared = Boolean(!this.opts.token && storedToken);
     const auth =
       authToken || this.opts.password
         ? {
@@ -250,7 +250,11 @@ export class GatewayClient {
     void this.request<HelloOk>("connect", params)
       .then((helloOk) => {
         const authInfo = helloOk?.auth;
-        if (authInfo?.deviceToken && this.opts.deviceIdentity) {
+        if (
+          authInfo?.deviceToken &&
+          this.opts.deviceIdentity &&
+          this.opts.mode !== GATEWAY_CLIENT_MODES.PROBE
+        ) {
           storeDeviceAuthToken({
             deviceId: this.opts.deviceIdentity.deviceId,
             role: authInfo.role ?? role,

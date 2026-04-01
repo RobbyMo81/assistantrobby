@@ -219,8 +219,8 @@ Design each agent with a single, clear responsibility:
 }
 ```
 
-✅ **Good:** Each agent has one job  
-❌ **Bad:** One generic "dev-helper" agent
+[OK] **Good:** Each agent has one job  
+[FAIL] **Bad:** One generic "dev-helper" agent
 
 ### 2. Use Descriptive Names
 
@@ -276,7 +276,7 @@ Result: Agent A and C respond, Agent B logs error
 
 Broadcast groups currently work with:
 
-- ✅ WhatsApp (implemented)
+- [OK] WhatsApp (implemented)
 - 🚧 Telegram (planned)
 - 🚧 Discord (planned)
 - 🚧 Slack (planned)
@@ -376,7 +376,7 @@ tail -f ~/.openclaw/logs/gateway.log | grep broadcast
 **Responses:**
 
 - code-formatter: "Fixed indentation and added type hints"
-- security-scanner: "⚠️ SQL injection vulnerability in line 12"
+- security-scanner: "[WARN] SQL injection vulnerability in line 12"
 - test-coverage: "Coverage is 45%, missing tests for error cases"
 - docs-checker: "Missing docstring for function `process_data`"
 

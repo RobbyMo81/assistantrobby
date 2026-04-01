@@ -366,10 +366,10 @@ pnpm clawdbot health
 
 echo "==> Checking for Swift 6.2 compatibility issues..."
 if grep -r "FileManager\.default\|Thread\.isMainThread" src/ apps/ --include="*.swift" --quiet; then
-    echo "⚠️  Found potential Swift 6.2 deprecated API usage"
+    echo "[WARN]  Found potential Swift 6.2 deprecated API usage"
     echo "   Run manual fixes or use analyze-mode investigation"
 else
-    echo "✅ No obvious Swift deprecation issues found"
+    echo "[OK] No obvious Swift deprecation issues found"
 fi
 
 echo "==> Testing agent functionality..."

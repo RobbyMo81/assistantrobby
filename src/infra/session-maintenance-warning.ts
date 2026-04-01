@@ -57,7 +57,7 @@ function buildWarningText(warning: SessionMaintenanceWarning): string {
   }
   const reasonText = reasons.length > 0 ? reasons.join(" and ") : "over maintenance limits";
   return (
-    `⚠️ Session maintenance warning: this active session would be evicted (${reasonText}). ` +
+    `[WARN] Session maintenance warning: this active session would be evicted (${reasonText}). ` +
     `Maintenance is set to warn-only, so nothing was reset. ` +
     `To enforce cleanup, set \`session.maintenance.mode: "enforce"\` or increase the limits.`
   );

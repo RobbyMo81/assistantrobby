@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
   agentCommand: vi.fn(),
   registerAgentRunContext: vi.fn(),
   loadConfigReturn: {} as Record<string, unknown>,
+  listAgentIds: vi.fn(() => ["main"]),
 }));
 
 vi.mock("../session-utils.js", () => ({
@@ -22,7 +23,8 @@ vi.mock("../../config/sessions.js", async () => {
     ...actual,
     updateSessionStore: mocks.updateSessionStore,
     resolveAgentIdFromSessionKey: () => "main",
-    resolveExplicitAgentSessionKey: () => undefined,
+    resolveExplicitAgentSessionKey: ({ agentId }: { agentId?: string }) =>
+      agentId ? `agent:${agentId}:main` : undefined,
     resolveAgentMainSessionKey: () => "agent:main:main",
   };
 });
@@ -36,7 +38,7 @@ vi.mock("../../config/config.js", () => ({
 }));
 
 vi.mock("../../agents/agent-scope.js", () => ({
-  listAgentIds: () => ["main"],
+  listAgentIds: mocks.listAgentIds,
 }));
 
 vi.mock("../../infra/agent-events.js", () => ({
@@ -66,6 +68,52 @@ const makeContext = (): GatewayRequestContext =>
   }) as unknown as GatewayRequestContext;
 
 describe("gateway agent handler", () => {
+  it("routes by message intent and normalizes configured role-agent ids", async () => {
+    mocks.loadConfigReturn = {
+      agents: {
+        defaults: {
+          roleAgents: {
+            planning: " Planner ",
+          },
+        },
+      },
+    };
+    mocks.listAgentIds.mockReturnValue(["main", "planner"]);
+    mocks.loadSessionEntry.mockReturnValue({
+      cfg: mocks.loadConfigReturn,
+      storePath: "/tmp/sessions.json",
+      entry: {
+        sessionId: "existing-session-id",
+        updatedAt: Date.now(),
+      },
+      canonicalKey: "agent:planner:main",
+    });
+    mocks.updateSessionStore.mockResolvedValue(undefined);
+    mocks.agentCommand.mockResolvedValue({
+      payloads: [{ text: "ok" }],
+      meta: { durationMs: 100 },
+    });
+
+    const respond = vi.fn();
+    await agentHandlers.agent({
+      params: {
+        message: "/plan sort out this architecture",
+        idempotencyKey: "test-intent-routing",
+      },
+      respond,
+      context: makeContext(),
+      req: { type: "req", id: "intent-1", method: "agent" },
+      client: null,
+      isWebchatConnect: () => false,
+    });
+
+    await vi.waitFor(() => expect(mocks.agentCommand).toHaveBeenCalled());
+    expect(mocks.agentCommand.mock.calls[0]?.[0]?.sessionKey).toBe("agent:planner:main");
+
+    mocks.loadConfigReturn = {};
+    mocks.listAgentIds.mockReturnValue(["main"]);
+  });
+
   it("preserves cliSessionIds from existing session entry", async () => {
     const existingCliSessionIds = { "claude-cli": "abc-123-def" };
     const existingClaudeCliSessionId = "abc-123-def";

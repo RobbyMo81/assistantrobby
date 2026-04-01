@@ -38,7 +38,7 @@ WhatsApp 渠道通过 **Baileys Web** 运行。本文档记录了发送、Gatewa
 - WhatsApp GIF 风格播放：发送带 `gifPlayback: true` 的 MP4（CLI：`--gif-playback`），使移动客户端内联循环播放。
 - MIME 检测优先使用魔数字节，然后是头信息，最后是文件扩展名。
 - 标题来自 `--message` 或 `reply.text`；允许空标题。
-- 日志：非详细模式显示 `↩️`/`✅`；详细模式包含大小和源路径/URL。
+- 日志：非详细模式显示 `↩️`/`[OK]`；详细模式包含大小和源路径/URL。
 
 ## 自动回复管道
 

@@ -133,7 +133,7 @@ export default function register(api: OpenClawPluginApi) {
         await api.runtime.config.writeConfigFile(nextConfig);
 
         const name = (chosen.name ?? "").trim() || "(unnamed)";
-        return { text: `✅ Talk voice set to ${name}\n${chosen.voice_id}` };
+        return { text: `[OK] Talk voice set to ${name}\n${chosen.voice_id}` };
       }
 
       return {

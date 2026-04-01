@@ -136,6 +136,12 @@ type PerplexitySearchResponse = {
 };
 
 type PerplexityBaseUrlHint = "direct" | "openrouter";
+type BraveSearchApiKeyResolution = {
+  apiKey?: string;
+  source: "env" | "config" | "none";
+  duplicateSourcesDetected: boolean;
+  migrationMirrorUsed: boolean;
+};
 
 function extractGrokContent(data: GrokSearchResponse): {
   text: string | undefined;
@@ -179,13 +185,34 @@ function resolveSearchEnabled(params: { search?: WebSearchConfig; sandboxed?: bo
   return true;
 }
 
-function resolveSearchApiKey(search?: WebSearchConfig): string | undefined {
+function resolveSearchApiKey(search?: WebSearchConfig): BraveSearchApiKeyResolution {
+  const fromEnv = normalizeSecretInput(process.env.BRAVE_API_KEY);
   const fromConfig =
     search && "apiKey" in search && typeof search.apiKey === "string"
       ? normalizeSecretInput(search.apiKey)
       : "";
-  const fromEnv = normalizeSecretInput(process.env.BRAVE_API_KEY);
-  return fromConfig || fromEnv || undefined;
+  if (fromEnv) {
+    return {
+      apiKey: fromEnv,
+      source: "env",
+      duplicateSourcesDetected: Boolean(fromConfig),
+      migrationMirrorUsed: false,
+    };
+  }
+  if (fromConfig) {
+    return {
+      apiKey: fromConfig,
+      source: "config",
+      duplicateSourcesDetected: false,
+      migrationMirrorUsed: true,
+    };
+  }
+  return {
+    apiKey: undefined,
+    source: "none",
+    duplicateSourcesDetected: false,
+    migrationMirrorUsed: false,
+  };
 }
 
 function missingSearchKeyPayload(provider: (typeof SEARCH_PROVIDERS)[number]) {
@@ -704,12 +731,13 @@ export function createWebSearchTool(options?: {
     execute: async (_toolCallId, args) => {
       const perplexityAuth =
         provider === "perplexity" ? resolvePerplexityApiKey(perplexityConfig) : undefined;
+      const braveAuth = provider === "brave" ? resolveSearchApiKey(search) : undefined;
       const apiKey =
         provider === "perplexity"
           ? perplexityAuth?.apiKey
           : provider === "grok"
             ? resolveGrokApiKey(grokConfig)
-            : resolveSearchApiKey(search);
+            : braveAuth?.apiKey;
 
       if (!apiKey) {
         return jsonResult(missingSearchKeyPayload(provider));
@@ -769,6 +797,7 @@ export const __testing = {
   isDirectPerplexityBaseUrl,
   resolvePerplexityRequestModel,
   normalizeFreshness,
+  resolveSearchApiKey,
   resolveGrokApiKey,
   resolveGrokModel,
   resolveGrokInlineCitations,

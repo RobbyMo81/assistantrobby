@@ -1,3 +1,4 @@
+const sshPath = "/usr/bin/ssh";
 import { spawn } from "node:child_process";
 import type { SshParsedTarget } from "./ssh-tunnel.js";
 
@@ -58,7 +59,7 @@ export async function resolveSshConfig(
   target: SshParsedTarget,
   opts: { identity?: string; timeoutMs?: number } = {},
 ): Promise<SshResolvedConfig | null> {
-  const sshPath = "/usr/bin/ssh";
+  const sshPath = process.env.OPENCLAW_SSH_PATH || "ssh";
   const args = ["-G"];
   if (target.port > 0 && target.port !== 22) {
     args.push("-p", String(target.port));

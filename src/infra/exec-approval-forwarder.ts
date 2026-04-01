@@ -168,7 +168,7 @@ function decisionLabel(decision: ExecApprovalDecision): string {
 }
 
 function buildResolvedMessage(resolved: ExecApprovalResolved) {
-  const base = `✅ Exec approval ${decisionLabel(resolved.decision)}.`;
+  const base = `[OK] Exec approval ${decisionLabel(resolved.decision)}.`;
   const by = resolved.resolvedBy ? ` Resolved by ${resolved.resolvedBy}.` : "";
   return `${base}${by} ID: ${resolved.id}`;
 }

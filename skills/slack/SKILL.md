@@ -1,7 +1,7 @@
 ---
 name: slack
 description: Use when you need to control Slack from OpenClaw via the slack tool, including reacting to messages or pinning/unpinning items in Slack channels or DMs.
-metadata: { "openclaw": { "emoji": "💬", "requires": { "config": ["channels.slack"] } } }
+metadata: { "openclaw": { "emoji": "", "requires": { "config": ["channels.slack"] } } }
 ---
 
 # Slack Actions
@@ -37,7 +37,7 @@ Message context lines include `slack message id` and `channel` fields you can re
   "action": "react",
   "channelId": "C123",
   "messageId": "1712023032.1234",
-  "emoji": "✅"
+  "emoji": "[OK]"
 }
 ```
 
@@ -140,5 +140,5 @@ Message context lines include `slack message id` and `channel` fields you can re
 
 ## Ideas to try
 
-- React with ✅ to mark completed tasks.
+- React with [OK] to mark completed tasks.
 - Pin key decisions or weekly status updates.

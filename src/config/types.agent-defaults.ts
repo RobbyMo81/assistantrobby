@@ -93,7 +93,15 @@ export type CliBackendConfig = {
   serialize?: boolean;
 };
 
+export type MessageRole = "chat" | "planning" | "codeReview" | "longTask" | "webSearch";
+
+export type RoutableMessageRole = Exclude<MessageRole, "chat">;
+
+export type RoleAgentsConfig = Partial<Record<RoutableMessageRole, string>>; // role → agentId
+
 export type AgentDefaultsConfig = {
+  /** Map of message roles to agent IDs for intent-based routing. */
+  roleAgents?: RoleAgentsConfig;
   /** Primary model and fallbacks (provider/model). */
   model?: AgentModelListConfig;
   /** Optional image-capable model and fallbacks (provider/model). */

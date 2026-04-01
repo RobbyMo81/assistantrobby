@@ -18,7 +18,7 @@ Automatically saves session context to memory when you issue `/new`.
 openclaw hooks enable session-memory
 ```
 
-### 📝 command-logger
+### command-logger
 
 Logs all command events to a centralized audit file.
 

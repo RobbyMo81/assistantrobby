@@ -135,6 +135,15 @@ export const AgentDefaultsSchema = z
         z.literal("message"),
       ])
       .optional(),
+    roleAgents: z
+      .object({
+        planning: z.string().optional(),
+        codeReview: z.string().optional(),
+        longTask: z.string().optional(),
+        webSearch: z.string().optional(),
+      })
+      .strict()
+      .optional(),
     heartbeat: HeartbeatSchema,
     maxConcurrent: z.number().int().positive().optional(),
     subagents: z

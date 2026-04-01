@@ -46,7 +46,7 @@ The wizard guides you through:
 2. Configuring app credentials in OpenClaw
 3. Starting the gateway
 
-✅ **After configuration**, check gateway status:
+[OK] **After configuration**, check gateway status:
 
 - `openclaw gateway status`
 - `openclaw logs --follow`
@@ -61,7 +61,7 @@ openclaw channels add
 
 Choose **Feishu**, then enter the App ID and App Secret.
 
-✅ **After configuration**, manage the gateway:
+[OK] **After configuration**, manage the gateway:
 
 - `openclaw gateway status`
 - `openclaw gateway restart`
@@ -139,7 +139,7 @@ In **App Capability** > **Bot**:
 
 ### 6. Configure event subscription
 
-⚠️ **Important:** before setting event subscription, make sure:
+[WARN] **Important:** before setting event subscription, make sure:
 
 1. You already ran `openclaw channels add` for Feishu
 2. The gateway is running (`openclaw gateway status`)
@@ -149,7 +149,7 @@ In **Event Subscription**:
 1. Choose **Use long connection to receive events** (WebSocket)
 2. Add the event: `im.message.receive_v1`
 
-⚠️ If the gateway is not running, the long-connection setup may fail to save.
+[WARN] If the gateway is not running, the long-connection setup may fail to save.
 
 ![Configure event subscription](../images/feishu-step6-event-subscription.png)
 
@@ -562,18 +562,18 @@ Key options:
 
 ### Receive
 
-- ✅ Text
-- ✅ Rich text (post)
-- ✅ Images
-- ✅ Files
-- ✅ Audio
-- ✅ Video
-- ✅ Stickers
+- [OK] Text
+- [OK] Rich text (post)
+- [OK] Images
+- [OK] Files
+- [OK] Audio
+- [OK] Video
+- [OK] Stickers
 
 ### Send
 
-- ✅ Text
-- ✅ Images
-- ✅ Files
-- ✅ Audio
-- ⚠️ Rich text (partial support)
+- [OK] Text
+- [OK] Images
+- [OK] Files
+- [OK] Audio
+- [WARN] Rich text (partial support)

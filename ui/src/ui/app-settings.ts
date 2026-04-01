@@ -36,6 +36,7 @@ import { resolveTheme, type ResolvedTheme, type ThemeMode } from "./theme.ts";
 
 type SettingsHost = {
   settings: UiSettings;
+  bootstrapToken: string;
   password?: string;
   theme: ThemeMode;
   themeResolved: ResolvedTheme;
@@ -97,8 +98,8 @@ export function applySettingsFromUrl(host: SettingsHost) {
 
   if (tokenRaw != null) {
     const token = tokenRaw.trim();
-    if (token && token !== host.settings.token) {
-      applySettings(host, { ...host.settings, token });
+    if (token && token !== host.bootstrapToken) {
+      host.bootstrapToken = token;
     }
     params.delete("token");
     hashParams.delete("token");
@@ -106,10 +107,6 @@ export function applySettingsFromUrl(host: SettingsHost) {
   }
 
   if (passwordRaw != null) {
-    const password = passwordRaw.trim();
-    if (password) {
-      (host as { password: string }).password = password;
-    }
     params.delete("password");
     hashParams.delete("password");
     shouldCleanUrl = true;

@@ -286,7 +286,10 @@ export async function monitorWebChannel(
         };
 
         if (minutesSinceLastMessage && minutesSinceLastMessage > 30) {
-          heartbeatLogger.warn(logData, "⚠️ web gateway heartbeat - no messages in 30+ minutes");
+          heartbeatLogger.warn(
+            logData,
+            "[WARN] web gateway heartbeat - no messages in 30+ minutes",
+          );
         } else {
           heartbeatLogger.info(logData, "web gateway heartbeat");
         }

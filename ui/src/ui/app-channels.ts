@@ -71,7 +71,7 @@ function resolveGatewayHttpAuthHeader(host: OpenClawApp): string | null {
   if (deviceToken) {
     return `Bearer ${deviceToken}`;
   }
-  const token = host.settings.token.trim();
+  const token = host.bootstrapToken.trim();
   if (token) {
     return `Bearer ${token}`;
   }

@@ -71,6 +71,7 @@ import { renderDebug } from "./views/debug.ts";
 import { renderExecApprovalPrompt } from "./views/exec-approval.ts";
 import { renderGatewayUrlConfirmation } from "./views/gateway-url-confirmation.ts";
 import { renderInstances } from "./views/instances.ts";
+import { renderLogin } from "./views/login.ts";
 import { renderLogs } from "./views/logs.ts";
 import { renderNodes } from "./views/nodes.ts";
 import { renderOverview } from "./views/overview.ts";
@@ -116,6 +117,22 @@ export function renderApp(state: AppViewState) {
     state.agentsList?.agents?.[0]?.id ??
     null;
 
+  if (!state.connected && state.tab === "overview") {
+    return html`
+      ${renderLogin({
+        settings: state.settings,
+        bootstrapToken: state.bootstrapToken,
+        password: state.password,
+        lastError: state.lastError,
+        onSettingsChange: (next) => state.applySettings(next),
+        onBootstrapTokenChange: (next) => (state.bootstrapToken = next),
+        onPasswordChange: (next) => (state.password = next),
+        onSubmit: () => state.connect(),
+      })}
+      ${renderGatewayUrlConfirmation(state)}
+    `;
+  }
+
   return html`
     <div class="shell ${isChat ? "shell--chat" : ""} ${chatFocus ? "shell--chat-focus" : ""} ${state.settings.navCollapsed ? "shell--nav-collapsed" : ""} ${state.onboarding ? "shell--onboarding" : ""}">
       <header class="topbar">
@@ -148,6 +165,15 @@ export function renderApp(state: AppViewState) {
             <span>Health</span>
             <span class="mono">${state.connected ? "OK" : "Offline"}</span>
           </div>
+          ${
+            state.connected
+              ? html`
+                <button class="btn" @click=${() => void state.logout()}>
+                  Log Out
+                </button>
+              `
+              : nothing
+          }
           ${renderThemeToggle(state)}
         </div>
       </header>
@@ -214,6 +240,7 @@ export function renderApp(state: AppViewState) {
                 connected: state.connected,
                 hello: state.hello,
                 settings: state.settings,
+                bootstrapToken: state.bootstrapToken,
                 password: state.password,
                 lastError: state.lastError,
                 presenceCount,
@@ -222,6 +249,7 @@ export function renderApp(state: AppViewState) {
                 cronNext,
                 lastChannelsRefresh: state.channelsLastSuccess,
                 onSettingsChange: (next) => state.applySettings(next),
+                onBootstrapTokenChange: (next) => (state.bootstrapToken = next),
                 onPasswordChange: (next) => (state.password = next),
                 onSessionKeyChange: (next) => {
                   state.sessionKey = next;

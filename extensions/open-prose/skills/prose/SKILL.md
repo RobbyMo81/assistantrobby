@@ -175,7 +175,7 @@ OpenProse supports three state management approaches:
 
 **Experimental PostgreSQL mode:** If the user passes `--state=postgres` or says "use postgres state":
 
-**⚠️ Security Note:** Database credentials in `OPENPROSE_POSTGRES_URL` are passed to subagent sessions and visible in logs. Advise users to use a dedicated database with limited-privilege credentials. See `state/postgres.md` for secure setup guidance.
+**[WARN] Security Note:** Database credentials in `OPENPROSE_POSTGRES_URL` are passed to subagent sessions and visible in logs. Advise users to use a dedicated database with limited-privilege credentials. See `state/postgres.md` for secure setup guidance.
 
 1. **Check for connection configuration first:**
 
@@ -195,7 +195,7 @@ OpenProse supports three state management approaches:
 3. **If not configured or connection fails, advise the user:**
 
    ```
-   ⚠️  PostgreSQL state requires a connection URL.
+   [WARN]  PostgreSQL state requires a connection URL.
 
    To configure:
    1. Set up a PostgreSQL database (Docker, local, or cloud)
@@ -297,17 +297,17 @@ When a user invokes `prose update`, check for legacy file structures and migrate
 ### Migration Output
 
 ```
-🔄 Migrating OpenProse workspace...
+ Migrating OpenProse workspace...
   ✓ Converted .prose/state.json → .prose/.env
   ✓ Renamed .prose/execution/ → .prose/runs/
   ✓ Created .prose/agents/
-✅ Migration complete. Your workspace is up to date.
+[OK] Migration complete. Your workspace is up to date.
 ```
 
 If no legacy files are found:
 
 ```
-✅ Workspace already up to date. No migration needed.
+[OK] Workspace already up to date. No migration needed.
 ```
 
 ### Skill File References (for maintainers)

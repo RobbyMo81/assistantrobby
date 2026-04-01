@@ -70,6 +70,8 @@ apps/ios/*.mobileprovision
 # Local untracked files
 .local/
 docs/.local/
+CLAUDE.md
+GEMINI.md
 IDENTITY.md
 USER.md
 .tgz
@@ -77,6 +79,15 @@ USER.md
 
 # local tooling
 .serena/
+.claude/
+.openclaw-config/
+Diagnostic_Quartet/
+argv.json
+.vscode/agent_instrutions.md
+
+# Exclude sensitive directories and nested git repositories
+.secrets/
+.openclaw-workspace/
 
 # Agent credentials and memory (NEVER COMMIT)
 /memory/

@@ -48,7 +48,10 @@ import {
   removeQueuedMessage as removeQueuedMessageInternal,
 } from "./app-chat.ts";
 import { DEFAULT_CRON_FORM, DEFAULT_LOG_LEVEL_FILTERS } from "./app-defaults.ts";
-import { connectGateway as connectGatewayInternal } from "./app-gateway.ts";
+import {
+  connectGateway as connectGatewayInternal,
+  logoutGateway as logoutGatewayInternal,
+} from "./app-gateway.ts";
 import {
   handleConnected,
   handleDisconnected,
@@ -105,6 +108,7 @@ function resolveOnboardingMode(): boolean {
 @customElement("openclaw-app")
 export class OpenClawApp extends LitElement {
   @state() settings: UiSettings = loadSettings();
+  @state() bootstrapToken = "";
   @state() password = "";
   @state() tab: Tab = "chat";
   @state() onboarding = resolveOnboardingMode();
@@ -368,6 +372,10 @@ export class OpenClawApp extends LitElement {
 
   connect() {
     connectGatewayInternal(this as unknown as Parameters<typeof connectGatewayInternal>[0]);
+  }
+
+  async logout() {
+    await logoutGatewayInternal(this as unknown as Parameters<typeof logoutGatewayInternal>[0]);
   }
 
   handleChatScroll(event: Event) {

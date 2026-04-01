@@ -41,7 +41,7 @@ ${formatHelpExamples([
     "Create a Discord poll.",
   ],
   [
-    'openclaw message react --channel discord --target 123 --message-id 456 --emoji "✅"',
+    'openclaw message react --channel discord --target 123 --message-id 456 --emoji "[OK]"',
     "React to a message.",
   ],
 ])}

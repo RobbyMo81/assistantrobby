@@ -258,4 +258,4 @@ killall -q OpenClaw 2>/dev/null || true
 echo "🔏 Signing bundle (auto-selects signing identity if SIGN_IDENTITY is unset)"
 "$ROOT_DIR/scripts/codesign-mac-app.sh" "$APP_ROOT"
 
-echo "✅ Bundle ready at $APP_ROOT"
+echo "[OK] Bundle ready at $APP_ROOT"

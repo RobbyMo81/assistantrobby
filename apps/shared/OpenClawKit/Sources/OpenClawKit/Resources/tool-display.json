@@ -46,7 +46,7 @@
       "detailKeys": ["path"]
     },
     "edit": {
-      "emoji": "📝",
+      "emoji": "",
       "title": "Edit",
       "detailKeys": ["path"]
     },
@@ -159,7 +159,7 @@
       }
     },
     "discord": {
-      "emoji": "💬",
+      "emoji": "",
       "title": "Discord",
       "actions": {
         "react": { "label": "react", "detailKeys": ["channelId", "messageId", "emoji"] },

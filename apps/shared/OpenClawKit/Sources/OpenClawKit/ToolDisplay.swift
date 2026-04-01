@@ -150,7 +150,7 @@ public enum ToolDisplayRegistry {
                     detailKeys: ["path"],
                     actions: nil),
                 "edit": ToolDisplaySpec(
-                    emoji: "📝",
+                    emoji: "",
                     title: "Edit",
                     label: nil,
                     detailKeys: ["path"],

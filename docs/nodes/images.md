@@ -31,7 +31,7 @@ The WhatsApp channel runs via **Baileys Web**. This document captures the curren
 - WhatsApp GIF-style playback: send an MP4 with `gifPlayback: true` (CLI: `--gif-playback`) so mobile clients loop inline.
 - MIME detection prefers magic bytes, then headers, then file extension.
 - Caption comes from `--message` or `reply.text`; empty caption is allowed.
-- Logging: non-verbose shows `↩️`/`✅`; verbose includes size and source path/URL.
+- Logging: non-verbose shows `↩️`/`[OK]`; verbose includes size and source path/URL.
 
 ## Auto-Reply Pipeline
 

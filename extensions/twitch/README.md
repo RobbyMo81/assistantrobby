@@ -20,7 +20,7 @@ Onboarding: select Twitch and confirm the install prompt to fetch the plugin aut
 
 Minimal config (simplified single-account):
 
-**⚠️ Important:** `requireMention` defaults to `true`. Add access control (`allowFrom` or `allowedRoles`) to prevent unauthorized users from triggering the bot.
+**[WARN] Important:** `requireMention` defaults to `true`. Add access control (`allowFrom` or `allowedRoles`) to prevent unauthorized users from triggering the bot.
 
 ```json5
 {

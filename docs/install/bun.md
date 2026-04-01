@@ -11,7 +11,7 @@ title: "Bun (Experimental)"
 Goal: run this repo with **Bun** (optional, not recommended for WhatsApp/Telegram)
 without diverging from pnpm workflows.
 
-⚠️ **Not recommended for Gateway runtime** (WhatsApp/Telegram bugs). Use Node for production.
+[WARN] **Not recommended for Gateway runtime** (WhatsApp/Telegram bugs). Use Node for production.
 
 ## Status
 

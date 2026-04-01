@@ -951,33 +951,33 @@ type NormalizedWebhookReaction = {
 };
 
 const REACTION_TYPE_MAP = new Map<number, { emoji: string; action: "added" | "removed" }>([
-  [2000, { emoji: "❤️", action: "added" }],
+  [2000, { emoji: "", action: "added" }],
   [2001, { emoji: "👍", action: "added" }],
   [2002, { emoji: "👎", action: "added" }],
-  [2003, { emoji: "😂", action: "added" }],
+  [2003, { emoji: "", action: "added" }],
   [2004, { emoji: "‼️", action: "added" }],
   [2005, { emoji: "❓", action: "added" }],
-  [3000, { emoji: "❤️", action: "removed" }],
+  [3000, { emoji: "", action: "removed" }],
   [3001, { emoji: "👍", action: "removed" }],
   [3002, { emoji: "👎", action: "removed" }],
-  [3003, { emoji: "😂", action: "removed" }],
+  [3003, { emoji: "", action: "removed" }],
   [3004, { emoji: "‼️", action: "removed" }],
   [3005, { emoji: "❓", action: "removed" }],
 ]);
 
 // Maps tapback text patterns (e.g., "Loved", "Liked") to emoji + action
 const TAPBACK_TEXT_MAP = new Map<string, { emoji: string; action: "added" | "removed" }>([
-  ["loved", { emoji: "❤️", action: "added" }],
+  ["loved", { emoji: "", action: "added" }],
   ["liked", { emoji: "👍", action: "added" }],
   ["disliked", { emoji: "👎", action: "added" }],
-  ["laughed at", { emoji: "😂", action: "added" }],
+  ["laughed at", { emoji: "", action: "added" }],
   ["emphasized", { emoji: "‼️", action: "added" }],
   ["questioned", { emoji: "❓", action: "added" }],
   // Removal patterns (e.g., "Removed a heart from")
-  ["removed a heart from", { emoji: "❤️", action: "removed" }],
+  ["removed a heart from", { emoji: "", action: "removed" }],
   ["removed a like from", { emoji: "👍", action: "removed" }],
   ["removed a dislike from", { emoji: "👎", action: "removed" }],
-  ["removed a laugh from", { emoji: "😂", action: "removed" }],
+  ["removed a laugh from", { emoji: "", action: "removed" }],
   ["removed an emphasis from", { emoji: "‼️", action: "removed" }],
   ["removed a question from", { emoji: "❓", action: "removed" }],
 ]);
@@ -1977,7 +1977,7 @@ async function processMessage(
   }
 
   // Use inline [[reply_to:N]] tag format
-  // For tapbacks/reactions: append at end (e.g., "reacted with ❤️ [[reply_to:4]]")
+  // For tapbacks/reactions: append at end (e.g., "reacted with  [[reply_to:4]]")
   // For regular replies: prepend at start (e.g., "[[reply_to:4]] Awesome")
   const replyTag = formatReplyTag({ replyToId, replyToShortId });
   const baseBody = replyTag
@@ -2449,7 +2449,7 @@ async function processReaction(
   const chatLabel = reaction.isGroup ? ` in group:${peerId}` : "";
   // Use short ID for token savings
   const messageDisplayId = getShortIdForUuid(reaction.messageId) || reaction.messageId;
-  // Format: "Tyler reacted with ❤️ [[reply_to:5]]" or "Tyler removed ❤️ reaction [[reply_to:5]]"
+  // Format: "Tyler reacted with  [[reply_to:5]]" or "Tyler removed  reaction [[reply_to:5]]"
   const text =
     reaction.action === "removed"
       ? `${senderLabel} removed ${reaction.emoji} reaction [[reply_to:${messageDisplayId}]]${chatLabel}`

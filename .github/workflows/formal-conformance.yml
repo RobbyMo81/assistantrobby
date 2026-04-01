@@ -112,7 +112,7 @@ jobs:
         with:
           script: |
             const body = [
-              '⚠️ **Formal models conformance drift detected**',
+              '[WARN] **Formal models conformance drift detected**',
               '',
               'The formal models extracted constants (`generated/*`) do not match this openclaw PR.',
               '',

@@ -41,7 +41,7 @@ Details: [Plugins](/tools/plugin)
    - If both are set, config takes precedence (env fallback is default-account only).
 5. Start the gateway.
 
-**⚠️ Important:** Add access control (`allowFrom` or `allowedRoles`) to prevent unauthorized users from triggering the bot. `requireMention` defaults to `true`.
+**[WARN] Important:** Add access control (`allowFrom` or `allowedRoles`) to prevent unauthorized users from triggering the bot. `requireMention` defaults to `true`.
 
 Minimal config:
 

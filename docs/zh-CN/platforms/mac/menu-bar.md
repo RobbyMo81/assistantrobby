@@ -41,7 +41,7 @@ x-i18n:
 - `exec` → 💻
 - `read` → 📄
 - `write` → ✍️
-- `edit` → 📝
+- `edit` →
 - `attach` → 📎
 - 默认 → 🛠️
 

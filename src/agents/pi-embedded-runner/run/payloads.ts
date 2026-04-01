@@ -236,7 +236,7 @@ export function buildEmbeddedRunPayloads(params: {
       );
       const errorSuffix = params.lastToolError.error ? `: ${params.lastToolError.error}` : "";
       replyItems.push({
-        text: `⚠️ ${toolSummary} failed${errorSuffix}`,
+        text: `[WARN] ${toolSummary} failed${errorSuffix}`,
         isError: true,
       });
     }

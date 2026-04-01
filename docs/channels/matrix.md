@@ -190,17 +190,17 @@ Once verified, the bot can decrypt messages in encrypted rooms.
 
 ## Capabilities
 
-| Feature         | Status                                                                                |
-| --------------- | ------------------------------------------------------------------------------------- |
-| Direct messages | ✅ Supported                                                                          |
-| Rooms           | ✅ Supported                                                                          |
-| Threads         | ✅ Supported                                                                          |
-| Media           | ✅ Supported                                                                          |
-| E2EE            | ✅ Supported (crypto module required)                                                 |
-| Reactions       | ✅ Supported (send/read via tools)                                                    |
-| Polls           | ✅ Send supported; inbound poll starts are converted to text (responses/ends ignored) |
-| Location        | ✅ Supported (geo URI; altitude ignored)                                              |
-| Native commands | ✅ Supported                                                                          |
+| Feature         | Status                                                                                  |
+| --------------- | --------------------------------------------------------------------------------------- |
+| Direct messages | [OK] Supported                                                                          |
+| Rooms           | [OK] Supported                                                                          |
+| Threads         | [OK] Supported                                                                          |
+| Media           | [OK] Supported                                                                          |
+| E2EE            | [OK] Supported (crypto module required)                                                 |
+| Reactions       | [OK] Supported (send/read via tools)                                                    |
+| Polls           | [OK] Send supported; inbound poll starts are converted to text (responses/ends ignored) |
+| Location        | [OK] Supported (geo URI; altitude ignored)                                              |
+| Native commands | [OK] Supported                                                                          |
 
 ## Troubleshooting
 

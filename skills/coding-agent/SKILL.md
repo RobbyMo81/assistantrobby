@@ -11,17 +11,17 @@ metadata:
 
 Use **bash** (with optional background mode) for all coding agent work. Simple and effective.
 
-## ⚠️ PTY Mode Required!
+## [WARN] PTY Mode Required!
 
 Coding agents (Codex, Claude Code, Pi) are **interactive terminal applications** that need a pseudo-terminal (PTY) to work correctly. Without PTY, you'll get broken output, missing colors, or the agent may hang.
 
 **Always use `pty:true`** when running coding agents:
 
 ```bash
-# ✅ Correct - with PTY
+# [OK] Correct - with PTY
 bash pty:true command:"codex exec 'Your prompt'"
 
-# ❌ Wrong - no PTY, agent may break
+# [FAIL] Wrong - no PTY, agent may break
 bash command:"codex exec 'Your prompt'"
 ```
 
@@ -120,7 +120,7 @@ bash pty:true workdir:~/project background:true command:"codex --yolo 'Refactor 
 
 ### Reviewing PRs
 
-**⚠️ CRITICAL: Never review PRs in OpenClaw's own project folder!**
+**[WARN] CRITICAL: Never review PRs in OpenClaw's own project folder!**
 Clone to temp folder or use git worktree.
 
 ```bash
@@ -220,7 +220,7 @@ git worktree remove /tmp/issue-99
 
 ---
 
-## ⚠️ Rules
+## [WARN] Rules
 
 1. **Always use pty:true** - coding agents need a terminal!
 2. **Respect tool choice** - if user asks for Codex, use Codex.
@@ -281,4 +281,4 @@ This triggers an immediate wake event — Skippy gets pinged in seconds, not 10 
 - **Git repo required:** Codex won't run outside a git directory. Use `mktemp -d && git init` for scratch work.
 - **exec is your friend:** `codex exec "prompt"` runs and exits cleanly - perfect for one-shots.
 - **submit vs write:** Use `submit` to send input + Enter, `write` for raw data without newline.
-- **Sass works:** Codex responds well to playful prompts. Asked it to write a haiku about being second fiddle to a space lobster, got: _"Second chair, I code / Space lobster sets the tempo / Keys glow, I follow"_ 🦞
+- **Sass works:** Codex responds well to playful prompts. Asked it to write a haiku about being second fiddle to a space lobster, got: _"Second chair, I code / Space lobster sets the tempo / Keys glow, I follow"_

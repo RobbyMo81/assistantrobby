@@ -51,7 +51,7 @@ hooks 系统允许你：
 OpenClaw 附带三个自动发现的捆绑 hooks：
 
 - **💾 session-memory**：当你发出 `/new` 时将会话上下文保存到智能体工作区（默认 `~/.openclaw/workspace/memory/`）
-- **📝 command-logger**：将所有命令事件记录到 `~/.openclaw/logs/commands.log`
+- ** command-logger**：将所有命令事件记录到 `~/.openclaw/logs/commands.log`
 - **🚀 boot-md**：当 Gateway 网关启动时运行 `BOOT.md`（需要启用内部 hooks）
 
 列出可用的 hooks：

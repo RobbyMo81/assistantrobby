@@ -283,7 +283,7 @@ Watches company Slack channel, responds helpfully, and forwards notifications to
 
 </CardGroup>
 
-## 🧠 Knowledge & Memory
+## Knowledge & Memory
 
 <CardGroup cols={2}>
 

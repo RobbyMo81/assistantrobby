@@ -44,7 +44,7 @@ struct SkillsSettingsSmokeTests {
                 baseDir: "/tmp/skills",
                 skillKey: "ready",
                 primaryEnv: nil,
-                emoji: "✅",
+                emoji: "[OK]",
                 homepage: "https://example.com/ready",
                 always: false,
                 disabled: false,

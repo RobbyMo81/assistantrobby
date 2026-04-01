@@ -44,7 +44,7 @@ The hooks system allows you to:
 OpenClaw ships with three bundled hooks that are automatically discovered:
 
 - **💾 session-memory**: Saves session context to your agent workspace (default `~/.openclaw/workspace/memory/`) when you issue `/new`
-- **📝 command-logger**: Logs all command events to `~/.openclaw/logs/commands.log`
+- ** command-logger**: Logs all command events to `~/.openclaw/logs/commands.log`
 - **🚀 boot-md**: Runs `BOOT.md` when the gateway starts (requires internal hooks enabled)
 
 List available hooks:

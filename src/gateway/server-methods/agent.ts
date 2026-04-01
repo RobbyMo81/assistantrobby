@@ -15,6 +15,7 @@ import {
   resolveAgentDeliveryPlan,
   resolveAgentOutboundTarget,
 } from "../../infra/outbound/agent-delivery.js";
+import { classifyMessageIntent, resolveIntentAgentId } from "../../routing/intent-router.js";
 import { normalizeAgentId } from "../../routing/session-key.js";
 import { defaultRuntime } from "../../runtime.js";
 import { resolveSendPolicy } from "../../sessions/send-policy.js";
@@ -166,7 +167,7 @@ export const agentHandlers: GatewayRequestHandlers = {
     }
 
     const agentIdRaw = typeof request.agentId === "string" ? request.agentId.trim() : "";
-    const agentId = agentIdRaw ? normalizeAgentId(agentIdRaw) : undefined;
+    let agentId = agentIdRaw ? normalizeAgentId(agentIdRaw) : undefined;
     if (agentId) {
       const knownAgents = listAgentIds(cfg);
       if (!knownAgents.includes(agentId)) {
@@ -179,6 +180,21 @@ export const agentHandlers: GatewayRequestHandlers = {
           ),
         );
         return;
+      }
+    }
+
+    // Intent-based agent routing: override agentId when no explicit agentId was provided.
+    if (!agentId) {
+      const intent = classifyMessageIntent(request.message);
+      if (intent !== "chat") {
+        const intentAgentIdRaw = resolveIntentAgentId(intent, cfg);
+        const intentAgentId = intentAgentIdRaw ? normalizeAgentId(intentAgentIdRaw) : undefined;
+        if (intentAgentId) {
+          const knownAgents = listAgentIds(cfg);
+          if (knownAgents.includes(intentAgentId)) {
+            agentId = intentAgentId;
+          }
+        }
       }
     }
 

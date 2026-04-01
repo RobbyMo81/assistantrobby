@@ -189,7 +189,7 @@ export const handleSubagentsCommand: CommandHandler = async (params, allowTextCo
 
   const requesterKey = resolveRequesterSessionKey(params);
   if (!requesterKey) {
-    return { shouldContinue: false, reply: { text: "⚠️ Missing session key." } };
+    return { shouldContinue: false, reply: { text: "[WARN] Missing session key." } };
   }
   const runs = listSubagentRunsForRequester(requesterKey);
 
@@ -240,7 +240,7 @@ export const handleSubagentsCommand: CommandHandler = async (params, allowTextCo
     if (!resolved.entry) {
       return {
         shouldContinue: false,
-        reply: { text: `⚠️ ${resolved.error ?? "Unknown subagent."}` },
+        reply: { text: `[WARN] ${resolved.error ?? "Unknown subagent."}` },
       };
     }
     if (resolved.entry.endedAt) {
@@ -285,7 +285,7 @@ export const handleSubagentsCommand: CommandHandler = async (params, allowTextCo
     if (!resolved.entry) {
       return {
         shouldContinue: false,
-        reply: { text: `⚠️ ${resolved.error ?? "Unknown subagent."}` },
+        reply: { text: `[WARN] ${resolved.error ?? "Unknown subagent."}` },
       };
     }
     const run = resolved.entry;
@@ -330,7 +330,7 @@ export const handleSubagentsCommand: CommandHandler = async (params, allowTextCo
     if (!resolved.entry) {
       return {
         shouldContinue: false,
-        reply: { text: `⚠️ ${resolved.error ?? "Unknown subagent."}` },
+        reply: { text: `[WARN] ${resolved.error ?? "Unknown subagent."}` },
       };
     }
     const history = await callGateway<{ messages: Array<unknown> }>({
@@ -360,7 +360,7 @@ export const handleSubagentsCommand: CommandHandler = async (params, allowTextCo
     if (!resolved.entry) {
       return {
         shouldContinue: false,
-        reply: { text: `⚠️ ${resolved.error ?? "Unknown subagent."}` },
+        reply: { text: `[WARN] ${resolved.error ?? "Unknown subagent."}` },
       };
     }
     const idempotencyKey = crypto.randomUUID();
@@ -385,7 +385,7 @@ export const handleSubagentsCommand: CommandHandler = async (params, allowTextCo
     } catch (err) {
       const messageText =
         err instanceof Error ? err.message : typeof err === "string" ? err : "error";
-      return { shouldContinue: false, reply: { text: `⚠️ Send failed: ${messageText}` } };
+      return { shouldContinue: false, reply: { text: `[WARN] Send failed: ${messageText}` } };
     }
 
     const waitMs = 30_000;
@@ -405,7 +405,7 @@ export const handleSubagentsCommand: CommandHandler = async (params, allowTextCo
       return {
         shouldContinue: false,
         reply: {
-          text: `⚠️ Subagent error: ${waitError} (run ${runId.slice(0, 8)}).`,
+          text: `[WARN] Subagent error: ${waitError} (run ${runId.slice(0, 8)}).`,
         },
       };
     }
@@ -421,7 +421,7 @@ export const handleSubagentsCommand: CommandHandler = async (params, allowTextCo
       shouldContinue: false,
       reply: {
         text:
-          replyText ?? `✅ Sent to ${formatRunLabel(resolved.entry)} (run ${runId.slice(0, 8)}).`,
+          replyText ?? `[OK] Sent to ${formatRunLabel(resolved.entry)} (run ${runId.slice(0, 8)}).`,
       },
     };
   }

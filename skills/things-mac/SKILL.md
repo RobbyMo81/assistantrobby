@@ -6,7 +6,7 @@ metadata:
   {
     "openclaw":
       {
-        "emoji": "✅",
+        "emoji": "[OK]",
         "os": ["darwin"],
         "requires": { "bins": ["things"] },
         "install":

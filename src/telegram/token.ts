@@ -8,6 +8,8 @@ export type TelegramTokenSource = "env" | "tokenFile" | "config" | "none";
 export type TelegramTokenResolution = {
   token: string;
   source: TelegramTokenSource;
+  duplicateSourcesDetected: boolean;
+  migrationMirrorUsed: boolean;
 };
 
 type ResolveTelegramTokenOpts = {
@@ -44,59 +46,109 @@ export function resolveTelegramToken(
     accountId !== DEFAULT_ACCOUNT_ID ? accountId : DEFAULT_ACCOUNT_ID,
   );
   const accountTokenFile = accountCfg?.tokenFile?.trim();
+  const accountToken = accountCfg?.botToken?.trim();
   if (accountTokenFile) {
     if (!fs.existsSync(accountTokenFile)) {
       opts.logMissingFile?.(
         `channels.telegram.accounts.${accountId}.tokenFile not found: ${accountTokenFile}`,
       );
-      return { token: "", source: "none" };
+      return {
+        token: "",
+        source: "none",
+        duplicateSourcesDetected: false,
+        migrationMirrorUsed: false,
+      };
     }
     try {
       const token = fs.readFileSync(accountTokenFile, "utf-8").trim();
       if (token) {
-        return { token, source: "tokenFile" };
+        return {
+          token,
+          source: "tokenFile",
+          duplicateSourcesDetected: Boolean(accountToken),
+          migrationMirrorUsed: false,
+        };
       }
     } catch (err) {
       opts.logMissingFile?.(
         `channels.telegram.accounts.${accountId}.tokenFile read failed: ${String(err)}`,
       );
-      return { token: "", source: "none" };
+      return {
+        token: "",
+        source: "none",
+        duplicateSourcesDetected: false,
+        migrationMirrorUsed: false,
+      };
     }
-    return { token: "", source: "none" };
+    return {
+      token: "",
+      source: "none",
+      duplicateSourcesDetected: false,
+      migrationMirrorUsed: false,
+    };
   }
 
-  const accountToken = accountCfg?.botToken?.trim();
   if (accountToken) {
-    return { token: accountToken, source: "config" };
+    return {
+      token: accountToken,
+      source: "config",
+      duplicateSourcesDetected: false,
+      migrationMirrorUsed: false,
+    };
   }
 
   const allowEnv = accountId === DEFAULT_ACCOUNT_ID;
   const tokenFile = telegramCfg?.tokenFile?.trim();
+  const envToken = allowEnv ? (opts.envToken ?? process.env.TELEGRAM_BOT_TOKEN)?.trim() : "";
+  const configToken = telegramCfg?.botToken?.trim();
   if (tokenFile && allowEnv) {
     if (!fs.existsSync(tokenFile)) {
       opts.logMissingFile?.(`channels.telegram.tokenFile not found: ${tokenFile}`);
-      return { token: "", source: "none" };
+      return {
+        token: "",
+        source: "none",
+        duplicateSourcesDetected: false,
+        migrationMirrorUsed: false,
+      };
     }
     try {
       const token = fs.readFileSync(tokenFile, "utf-8").trim();
       if (token) {
-        return { token, source: "tokenFile" };
+        return {
+          token,
+          source: "tokenFile",
+          duplicateSourcesDetected: Boolean(envToken || configToken),
+          migrationMirrorUsed: false,
+        };
       }
     } catch (err) {
       opts.logMissingFile?.(`channels.telegram.tokenFile read failed: ${String(err)}`);
-      return { token: "", source: "none" };
+      return {
+        token: "",
+        source: "none",
+        duplicateSourcesDetected: false,
+        migrationMirrorUsed: false,
+      };
     }
   }
 
-  const configToken = telegramCfg?.botToken?.trim();
-  if (configToken && allowEnv) {
-    return { token: configToken, source: "config" };
-  }
-
-  const envToken = allowEnv ? (opts.envToken ?? process.env.TELEGRAM_BOT_TOKEN)?.trim() : "";
   if (envToken) {
-    return { token: envToken, source: "env" };
+    return {
+      token: envToken,
+      source: "env",
+      duplicateSourcesDetected: Boolean(configToken),
+      migrationMirrorUsed: false,
+    };
   }
 
-  return { token: "", source: "none" };
+  if (configToken && allowEnv) {
+    return {
+      token: configToken,
+      source: "config",
+      duplicateSourcesDetected: false,
+      migrationMirrorUsed: true,
+    };
+  }
+
+  return { token: "", source: "none", duplicateSourcesDetected: false, migrationMirrorUsed: false };
 }

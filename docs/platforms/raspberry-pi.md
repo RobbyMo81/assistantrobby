@@ -21,14 +21,14 @@ Perfect for:
 
 ## Hardware Requirements
 
-| Pi Model        | RAM     | Works?   | Notes                              |
-| --------------- | ------- | -------- | ---------------------------------- |
-| **Pi 5**        | 4GB/8GB | ✅ Best  | Fastest, recommended               |
-| **Pi 4**        | 4GB     | ✅ Good  | Sweet spot for most users          |
-| **Pi 4**        | 2GB     | ✅ OK    | Works, add swap                    |
-| **Pi 4**        | 1GB     | ⚠️ Tight | Possible with swap, minimal config |
-| **Pi 3B+**      | 1GB     | ⚠️ Slow  | Works but sluggish                 |
-| **Pi Zero 2 W** | 512MB   | ❌       | Not recommended                    |
+| Pi Model        | RAM     | Works?       | Notes                              |
+| --------------- | ------- | ------------ | ---------------------------------- |
+| **Pi 5**        | 4GB/8GB | [OK] Best    | Fastest, recommended               |
+| **Pi 4**        | 4GB     | [OK] Good    | Sweet spot for most users          |
+| **Pi 4**        | 2GB     | [OK] OK      | Works, add swap                    |
+| **Pi 4**        | 1GB     | [WARN] Tight | Possible with swap, minimal config |
+| **Pi 3B+**      | 1GB     | [WARN] Slow  | Works but sluggish                 |
+| **Pi Zero 2 W** | 512MB   | [FAIL]       | Not recommended                    |
 
 **Minimum specs:** 1GB RAM, 1 core, 500MB disk  
 **Recommended:** 2GB+ RAM, 64-bit OS, 16GB+ SD card (or USB SSD)
@@ -225,11 +225,11 @@ Most OpenClaw features work on ARM64, but some external binaries may need ARM bu
 
 | Tool               | ARM64 Status | Notes                               |
 | ------------------ | ------------ | ----------------------------------- |
-| Node.js            | ✅           | Works great                         |
-| WhatsApp (Baileys) | ✅           | Pure JS, no issues                  |
-| Telegram           | ✅           | Pure JS, no issues                  |
-| gog (Gmail CLI)    | ⚠️           | Check for ARM release               |
-| Chromium (browser) | ✅           | `sudo apt install chromium-browser` |
+| Node.js            | [OK]         | Works great                         |
+| WhatsApp (Baileys) | [OK]         | Pure JS, no issues                  |
+| Telegram           | [OK]         | Pure JS, no issues                  |
+| gog (Gmail CLI)    | [WARN]       | Check for ARM release               |
+| Chromium (browser) | [OK]         | `sudo apt install chromium-browser` |
 
 If a skill fails, check if its binary has an ARM build. Many Go/Rust tools do; some don't.
 

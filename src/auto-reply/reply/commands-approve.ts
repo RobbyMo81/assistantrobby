@@ -94,7 +94,7 @@ export const handleApproveCommand: CommandHandler = async (params, allowTextComm
       return {
         shouldContinue: false,
         reply: {
-          text: "❌ /approve requires operator.approvals for gateway clients.",
+          text: "[FAIL] /approve requires operator.approvals for gateway clients.",
         },
       };
     }
@@ -113,13 +113,13 @@ export const handleApproveCommand: CommandHandler = async (params, allowTextComm
     return {
       shouldContinue: false,
       reply: {
-        text: `❌ Failed to submit approval: ${String(err)}`,
+        text: `[FAIL] Failed to submit approval: ${String(err)}`,
       },
     };
   }
 
   return {
     shouldContinue: false,
-    reply: { text: `✅ Exec approval ${parsed.decision} submitted for ${parsed.id}.` },
+    reply: { text: `[OK] Exec approval ${parsed.decision} submitted for ${parsed.id}.` },
   };
 };

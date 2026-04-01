@@ -113,11 +113,12 @@ export async function scanStatus(
         typeof cfg.gateway?.remote?.url === "string" ? cfg.gateway.remote.url : "";
       const remoteUrlMissing = isRemoteMode && !remoteUrlRaw.trim();
       const gatewayMode = isRemoteMode ? "remote" : "local";
+      const probeAuth = resolveGatewayProbeAuth(cfg);
       const gatewayProbe = remoteUrlMissing
         ? null
         : await probeGateway({
             url: gatewayConnection.url,
-            auth: resolveGatewayProbeAuth(cfg),
+            auth: probeAuth,
             timeoutMs: Math.min(opts.all ? 5000 : 2500, opts.timeoutMs ?? 10_000),
           }).catch(() => null);
       const gatewayReachable = gatewayProbe?.ok === true;
@@ -134,6 +135,8 @@ export async function scanStatus(
               probe: false,
               timeoutMs: Math.min(8000, opts.timeoutMs ?? 10_000),
             },
+            token: probeAuth.token,
+            password: probeAuth.password,
             timeoutMs: Math.min(opts.all ? 5000 : 2500, opts.timeoutMs ?? 10_000),
           }).catch(() => null)
         : null;

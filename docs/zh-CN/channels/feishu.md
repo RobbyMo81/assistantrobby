@@ -46,7 +46,7 @@ openclaw onboard
 2. 配置应用凭证
 3. 启动网关
 
-✅ **完成配置后**，您可以使用以下命令检查网关状态：
+[OK] **完成配置后**，您可以使用以下命令检查网关状态：
 
 - `openclaw gateway status` - 查看网关运行状态
 - `openclaw logs --follow` - 查看实时日志
@@ -61,7 +61,7 @@ openclaw channels add
 
 然后根据交互式提示选择 Feishu，输入 App ID 和 App Secret 即可。
 
-✅ **完成配置后**，您可以使用以下命令管理网关：
+[OK] **完成配置后**，您可以使用以下命令管理网关：
 
 - `openclaw gateway status` - 查看网关运行状态
 - `openclaw gateway restart` - 重启网关以应用新配置
@@ -145,7 +145,7 @@ Lark（国际版）请使用 https://open.larksuite.com/app，并在配置中设
 
 ### 6. 配置事件订阅
 
-⚠️ **重要提醒**：在配置事件订阅前，请务必确保已完成以下步骤：
+[WARN] **重要提醒**：在配置事件订阅前，请务必确保已完成以下步骤：
 
 1. 运行 `openclaw channels add` 添加了 Feishu 渠道
 2. 网关处于启动状态（可通过 `openclaw gateway status` 检查状态）
@@ -155,7 +155,7 @@ Lark（国际版）请使用 https://open.larksuite.com/app，并在配置中设
 1. 选择 **使用长连接接收事件**（WebSocket 模式）
 2. 添加事件：`im.message.receive_v1`（接收消息）
 
-⚠️ **注意**：如果网关未启动或渠道未添加，长连接设置将保存失败。
+[WARN] **注意**：如果网关未启动或渠道未添加，长连接设置将保存失败。
 
 ![配置事件订阅](/images/feishu-step6-event-subscription.png)
 
@@ -613,17 +613,17 @@ openclaw pairing list feishu
 
 ### 接收
 
-- ✅ 文本消息
-- ✅ 图片
-- ✅ 文件
-- ✅ 音频
-- ✅ 视频
-- ✅ 表情包
+- [OK] 文本消息
+- [OK] 图片
+- [OK] 文件
+- [OK] 音频
+- [OK] 视频
+- [OK] 表情包
 
 ### 发送
 
-- ✅ 文本消息
-- ✅ 图片
-- ✅ 文件
-- ✅ 音频
-- ⚠️ 富文本（部分支持）
+- [OK] 文本消息
+- [OK] 图片
+- [OK] 文件
+- [OK] 音频
+- [WARN] 富文本（部分支持）

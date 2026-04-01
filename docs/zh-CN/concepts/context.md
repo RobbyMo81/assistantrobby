@@ -43,7 +43,7 @@ x-i18n:
 ### `/context list`
 
 ```
-🧠 Context breakdown
+ Context breakdown
 Workspace: <workspaceDir>
 Bootstrap max/file: 20,000 chars
 Sandbox: mode=non-main sandboxed=false
@@ -70,7 +70,7 @@ Session tokens (cached): 14,250 total / ctx=32,000
 ### `/context detail`
 
 ```
-🧠 Context breakdown (detailed)
+ Context breakdown (detailed)
 …
 Top skills (prompt entry size):
 - frontend-design: 412 chars (~103 tok)

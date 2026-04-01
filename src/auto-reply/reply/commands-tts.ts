@@ -152,7 +152,7 @@ export const handleTtsCommands: CommandHandler = async (params, allowTextCommand
     });
     return {
       shouldContinue: false,
-      reply: { text: `❌ Error generating audio: ${result.error ?? "unknown error"}` },
+      reply: { text: `[FAIL] Error generating audio: ${result.error ?? "unknown error"}` },
     };
   }
 
@@ -168,9 +168,9 @@ export const handleTtsCommands: CommandHandler = async (params, allowTextCommand
           text:
             `🎙️ TTS provider\n` +
             `Primary: ${currentProvider}\n` +
-            `OpenAI key: ${hasOpenAI ? "✅" : "❌"}\n` +
-            `ElevenLabs key: ${hasElevenLabs ? "✅" : "❌"}\n` +
-            `Edge enabled: ${hasEdge ? "✅" : "❌"}\n` +
+            `OpenAI key: ${hasOpenAI ? "[OK]" : "[FAIL]"}\n` +
+            `ElevenLabs key: ${hasElevenLabs ? "[OK]" : "[FAIL]"}\n` +
+            `Edge enabled: ${hasEdge ? "[OK]" : "[FAIL]"}\n` +
             `Usage: /tts provider openai | elevenlabs | edge`,
         },
       };
@@ -184,7 +184,7 @@ export const handleTtsCommands: CommandHandler = async (params, allowTextCommand
     setTtsProvider(prefsPath, requested);
     return {
       shouldContinue: false,
-      reply: { text: `✅ TTS provider set to ${requested}.` },
+      reply: { text: `[OK] TTS provider set to ${requested}.` },
     };
   }
 
@@ -207,13 +207,13 @@ export const handleTtsCommands: CommandHandler = async (params, allowTextCommand
     if (!Number.isFinite(next) || next < 100 || next > 4096) {
       return {
         shouldContinue: false,
-        reply: { text: "❌ Limit must be between 100 and 4096 characters." },
+        reply: { text: "[FAIL] Limit must be between 100 and 4096 characters." },
       };
     }
     setTtsMaxLength(prefsPath, next);
     return {
       shouldContinue: false,
-      reply: { text: `✅ TTS limit set to ${next} characters.` },
+      reply: { text: `[OK] TTS limit set to ${next} characters.` },
     };
   }
 
@@ -225,7 +225,7 @@ export const handleTtsCommands: CommandHandler = async (params, allowTextCommand
         shouldContinue: false,
         reply: {
           text:
-            `📝 TTS auto-summary: ${enabled ? "on" : "off"}.\n\n` +
+            ` TTS auto-summary: ${enabled ? "on" : "off"}.\n\n` +
             `When text exceeds ${maxLen} chars:\n` +
             `• ON: summarizes text, then generates audio\n` +
             `• OFF: truncates text, then generates audio\n\n` +
@@ -241,7 +241,10 @@ export const handleTtsCommands: CommandHandler = async (params, allowTextCommand
     return {
       shouldContinue: false,
       reply: {
-        text: requested === "on" ? "✅ TTS auto-summary enabled." : "❌ TTS auto-summary disabled.",
+        text:
+          requested === "on"
+            ? "[OK] TTS auto-summary enabled."
+            : "[FAIL] TTS auto-summary disabled.",
       },
     };
   }
@@ -255,15 +258,15 @@ export const handleTtsCommands: CommandHandler = async (params, allowTextCommand
     const last = getLastTtsAttempt();
     const lines = [
       "📊 TTS status",
-      `State: ${enabled ? "✅ enabled" : "❌ disabled"}`,
-      `Provider: ${provider} (${hasKey ? "✅ configured" : "❌ not configured"})`,
+      `State: ${enabled ? "[OK] enabled" : "[FAIL] disabled"}`,
+      `Provider: ${provider} (${hasKey ? "[OK] configured" : "[FAIL] not configured"})`,
       `Text limit: ${maxLength} chars`,
       `Auto-summary: ${summarize ? "on" : "off"}`,
     ];
     if (last) {
       const timeAgo = Math.round((Date.now() - last.timestamp) / 1000);
       lines.push("");
-      lines.push(`Last attempt (${timeAgo}s ago): ${last.success ? "✅" : "❌"}`);
+      lines.push(`Last attempt (${timeAgo}s ago): ${last.success ? "[OK]" : "[FAIL]"}`);
       lines.push(`Text: ${last.textLength} chars${last.summarized ? " (summarized)" : ""}`);
       if (last.success) {
         lines.push(`Provider: ${last.provider ?? "unknown"}`);

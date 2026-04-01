@@ -38,7 +38,7 @@ x-i18n:
   identity: {
     name: "Clawd",
     theme: "helpful assistant",
-    emoji: "🦞",
+    emoji: "",
   },
   agent: {
     workspace: "~/.openclaw/workspace",
@@ -106,7 +106,7 @@ x-i18n:
   messages: {
     messagePrefix: "[openclaw]",
     responsePrefix: ">",
-    ackReaction: "👀",
+    ackReaction: "",
     ackReactionScope: "group-mentions",
   },
 

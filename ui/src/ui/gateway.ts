@@ -57,6 +57,7 @@ export type GatewayBrowserClientOptions = {
   onEvent?: (evt: GatewayEventFrame) => void;
   onClose?: (info: { code: number; reason: string }) => void;
   onGap?: (info: { expected: number; received: number }) => void;
+  onAuthFallback?: (info: { reason: string }) => void;
 };
 
 // 4008 = application-defined code (browser rejects 1008 "Policy Violation")
@@ -125,6 +126,45 @@ export class GatewayBrowserClient {
     this.pending.clear();
   }
 
+  private buildClientInfo() {
+    return {
+      id: this.opts.clientName ?? GATEWAY_CLIENT_NAMES.CONTROL_UI,
+      version: this.opts.clientVersion ?? "dev",
+      platform: this.opts.platform ?? navigator.platform ?? "web",
+      mode: this.opts.mode ?? GATEWAY_CLIENT_MODES.WEBCHAT,
+      instanceId: this.opts.instanceId,
+    };
+  }
+
+  private async buildSignedDevice(params: {
+    deviceIdentity: Awaited<ReturnType<typeof loadOrCreateDeviceIdentity>>;
+    client: ReturnType<GatewayBrowserClient["buildClientInfo"]>;
+    role: string;
+    scopes: string[];
+    authToken: string | null;
+    nonce?: string;
+  }) {
+    const signedAtMs = Date.now();
+    const payload = buildDeviceAuthPayload({
+      deviceId: params.deviceIdentity.deviceId,
+      clientId: params.client.id,
+      clientMode: params.client.mode,
+      role: params.role,
+      scopes: params.scopes,
+      signedAtMs,
+      token: params.authToken,
+      nonce: params.nonce,
+    });
+    const signature = await signDevicePayload(params.deviceIdentity.privateKey, payload);
+    return {
+      id: params.deviceIdentity.deviceId,
+      publicKey: params.deviceIdentity.publicKey,
+      signature,
+      signedAt: signedAtMs,
+      nonce: params.nonce,
+    };
+  }
+
   private async sendConnect() {
     if (this.connectSent) {
       return;
@@ -142,18 +182,29 @@ export class GatewayBrowserClient {
 
     const scopes = ["operator.admin", "operator.approvals", "operator.pairing"];
     const role = "operator";
+    const client = this.buildClientInfo();
     let deviceIdentity: Awaited<ReturnType<typeof loadOrCreateDeviceIdentity>> | null = null;
     let canFallbackToShared = false;
     let authToken = this.opts.token;
+    let storedToken: string | undefined;
 
     if (isSecureContext) {
       deviceIdentity = await loadOrCreateDeviceIdentity();
-      const storedToken = loadDeviceAuthToken({
-        deviceId: deviceIdentity.deviceId,
-        role,
-      })?.token;
+      storedToken =
+        (
+          await loadDeviceAuthToken({
+            deviceId: deviceIdentity.deviceId,
+            role,
+            keyMaterial: deviceIdentity.privateKey,
+          }).catch(() => {
+            this.opts.onAuthFallback?.({
+              reason: "secret container load failed; explicit login required",
+            });
+            return null;
+          })
+        )?.token ?? undefined;
       authToken = storedToken ?? this.opts.token;
-      canFallbackToShared = Boolean(storedToken && this.opts.token);
+      canFallbackToShared = Boolean(storedToken && (this.opts.token || this.opts.password));
     }
     const auth =
       authToken || this.opts.password
@@ -174,37 +225,20 @@ export class GatewayBrowserClient {
       | undefined;
 
     if (isSecureContext && deviceIdentity) {
-      const signedAtMs = Date.now();
       const nonce = this.connectNonce ?? undefined;
-      const payload = buildDeviceAuthPayload({
-        deviceId: deviceIdentity.deviceId,
-        clientId: this.opts.clientName ?? GATEWAY_CLIENT_NAMES.CONTROL_UI,
-        clientMode: this.opts.mode ?? GATEWAY_CLIENT_MODES.WEBCHAT,
+      device = await this.buildSignedDevice({
+        deviceIdentity,
+        client,
         role,
         scopes,
-        signedAtMs,
-        token: authToken ?? null,
+        authToken: authToken ?? null,
         nonce,
       });
-      const signature = await signDevicePayload(deviceIdentity.privateKey, payload);
-      device = {
-        id: deviceIdentity.deviceId,
-        publicKey: deviceIdentity.publicKey,
-        signature,
-        signedAt: signedAtMs,
-        nonce,
-      };
     }
     const params = {
       minProtocol: 3,
       maxProtocol: 3,
-      client: {
-        id: this.opts.clientName ?? GATEWAY_CLIENT_NAMES.CONTROL_UI,
-        version: this.opts.clientVersion ?? "dev",
-        platform: this.opts.platform ?? navigator.platform ?? "web",
-        mode: this.opts.mode ?? GATEWAY_CLIENT_MODES.WEBCHAT,
-        instanceId: this.opts.instanceId,
-      },
+      client,
       role,
       scopes,
       device,
@@ -215,21 +249,33 @@ export class GatewayBrowserClient {
     };
 
     void this.request<GatewayHelloOk>("connect", params)
-      .then((hello) => {
+      .then(async (hello) => {
         if (hello?.auth?.deviceToken && deviceIdentity) {
-          storeDeviceAuthToken({
+          await storeDeviceAuthToken({
             deviceId: deviceIdentity.deviceId,
             role: hello.auth.role ?? role,
+            keyMaterial: deviceIdentity.privateKey,
             token: hello.auth.deviceToken,
             scopes: hello.auth.scopes ?? [],
+          }).catch(() => {
+            this.opts.onAuthFallback?.({
+              reason: "secret container save failed after connect; session will not persist",
+            });
           });
         }
         this.backoffMs = 800;
         this.opts.onHello?.(hello);
       })
-      .catch(() => {
+      .catch(async () => {
         if (canFallbackToShared && deviceIdentity) {
-          clearDeviceAuthToken({ deviceId: deviceIdentity.deviceId, role });
+          await clearDeviceAuthToken({ deviceId: deviceIdentity.deviceId, role }).catch(() => {
+            this.opts.onAuthFallback?.({
+              reason: "secret container clear failed after stored session rejection",
+            });
+          });
+          this.opts.onAuthFallback?.({
+            reason: "stored session rejected; cleared it and retrying bootstrap auth",
+          });
         }
         this.ws?.close(CONNECT_FAILED_CLOSE_CODE, "connect failed");
       });

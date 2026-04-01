@@ -92,7 +92,7 @@ export function displaySummary(
   runtime.log(`Total: ${totalCount} (${runningCount} running)`);
 
   if (mismatchCount > 0) {
-    runtime.log(`\n⚠️  ${mismatchCount} container(s) with image mismatch detected.`);
+    runtime.log(`\n[WARN]  ${mismatchCount} container(s) with image mismatch detected.`);
     runtime.log(
       `   Run '${formatCliCommand("openclaw sandbox recreate --all")}' to update all containers.`,
     );

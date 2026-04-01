@@ -48,7 +48,7 @@ openclaw plugins install ./extensions/twitch
    - 如果两者都设置，配置优先（环境变量回退仅适用于默认账户）。
 5. 启动 Gateway 网关。
 
-**⚠️ 重要：** 添加访问控制（`allowFrom` 或 `allowedRoles`）以防止未授权用户触发机器人。`requireMention` 默认为 `true`。
+**[WARN] 重要：** 添加访问控制（`allowFrom` 或 `allowedRoles`）以防止未授权用户触发机器人。`requireMention` 默认为 `true`。
 
 最小配置：
 

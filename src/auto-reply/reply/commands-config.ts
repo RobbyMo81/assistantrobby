@@ -40,14 +40,14 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
     return {
       shouldContinue: false,
       reply: {
-        text: "⚠️ /config is disabled. Set commands.config=true to enable.",
+        text: "[WARN] /config is disabled. Set commands.config=true to enable.",
       },
     };
   }
   if (configCommand.action === "error") {
     return {
       shouldContinue: false,
-      reply: { text: `⚠️ ${configCommand.message}` },
+      reply: { text: `[WARN] ${configCommand.message}` },
     };
   }
 
@@ -66,7 +66,7 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
       return {
         shouldContinue: false,
         reply: {
-          text: `⚠️ Config writes are disabled for ${channelLabel}. Set ${hint} to enable.`,
+          text: `[WARN] Config writes are disabled for ${channelLabel}. Set ${hint} to enable.`,
         },
       };
     }
@@ -77,7 +77,7 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
     return {
       shouldContinue: false,
       reply: {
-        text: "⚠️ Config file is invalid; fix it before using /config.",
+        text: "[WARN] Config file is invalid; fix it before using /config.",
       },
     };
   }
@@ -90,7 +90,7 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
       if (!parsedPath.ok || !parsedPath.path) {
         return {
           shouldContinue: false,
-          reply: { text: `⚠️ ${parsedPath.error ?? "Invalid path."}` },
+          reply: { text: `[WARN] ${parsedPath.error ?? "Invalid path."}` },
         };
       }
       const value = getConfigValueAtPath(parsedBase, parsedPath.path);
@@ -114,7 +114,7 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
     if (!parsedPath.ok || !parsedPath.path) {
       return {
         shouldContinue: false,
-        reply: { text: `⚠️ ${parsedPath.error ?? "Invalid path."}` },
+        reply: { text: `[WARN] ${parsedPath.error ?? "Invalid path."}` },
       };
     }
     const removed = unsetConfigValueAtPath(parsedBase, parsedPath.path);
@@ -130,7 +130,7 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
       return {
         shouldContinue: false,
         reply: {
-          text: `⚠️ Config invalid after unset (${issue.path}: ${issue.message}).`,
+          text: `[WARN] Config invalid after unset (${issue.path}: ${issue.message}).`,
         },
       };
     }
@@ -146,7 +146,7 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
     if (!parsedPath.ok || !parsedPath.path) {
       return {
         shouldContinue: false,
-        reply: { text: `⚠️ ${parsedPath.error ?? "Invalid path."}` },
+        reply: { text: `[WARN] ${parsedPath.error ?? "Invalid path."}` },
       };
     }
     setConfigValueAtPath(parsedBase, parsedPath.path, configCommand.value);
@@ -156,7 +156,7 @@ export const handleConfigCommand: CommandHandler = async (params, allowTextComma
       return {
         shouldContinue: false,
         reply: {
-          text: `⚠️ Config invalid after set (${issue.path}: ${issue.message}).`,
+          text: `[WARN] Config invalid after set (${issue.path}: ${issue.message}).`,
         },
       };
     }
@@ -194,14 +194,14 @@ export const handleDebugCommand: CommandHandler = async (params, allowTextComman
     return {
       shouldContinue: false,
       reply: {
-        text: "⚠️ /debug is disabled. Set commands.debug=true to enable.",
+        text: "[WARN] /debug is disabled. Set commands.debug=true to enable.",
       },
     };
   }
   if (debugCommand.action === "error") {
     return {
       shouldContinue: false,
-      reply: { text: `⚠️ ${debugCommand.message}` },
+      reply: { text: `[WARN] ${debugCommand.message}` },
     };
   }
   if (debugCommand.action === "show") {
@@ -233,7 +233,7 @@ export const handleDebugCommand: CommandHandler = async (params, allowTextComman
     if (!result.ok) {
       return {
         shouldContinue: false,
-        reply: { text: `⚠️ ${result.error ?? "Invalid path."}` },
+        reply: { text: `[WARN] ${result.error ?? "Invalid path."}` },
       };
     }
     if (!result.removed) {
@@ -254,7 +254,7 @@ export const handleDebugCommand: CommandHandler = async (params, allowTextComman
     if (!result.ok) {
       return {
         shouldContinue: false,
-        reply: { text: `⚠️ ${result.error ?? "Invalid override."}` },
+        reply: { text: `[WARN] ${result.error ?? "Invalid override."}` },
       };
     }
     const valueLabel =

@@ -432,7 +432,7 @@ export default function register(api: OpenClawPluginApi) {
         const label = approved.device.displayName?.trim() || approved.device.deviceId;
         const platform = approved.device.platform?.trim();
         const platformLabel = platform ? ` (${platform})` : "";
-        return { text: `✅ Paired ${label}${platformLabel}.` };
+        return { text: `[OK] Paired ${label}${platformLabel}.` };
       }
 
       const auth = resolveAuth(api.config);

@@ -1,4 +1,4 @@
-# 🦞 OpenClaw — Personal AI Assistant
+# OpenClaw — Personal AI Assistant
 
 <p align="center">
     <picture>
@@ -79,9 +79,9 @@ Upgrading? [Updating guide](https://docs.openclaw.ai/install/updating) (and run 
 
 This project is undergoing a continuous architectural audit and security hardening process.
 
-*   **Architecture Documentation:** A detailed architectural overview, including structural diagrams and implementation logic, can be found in [docs/architecture.md](docs/architecture.md).
-*   **Security Hardening:** Recent efforts have focused on addressing critical vulnerabilities (CVE-2026-25253, CVE-2026-25157) and enhancing skill sandbox validation. A comprehensive [Verification Audit Log](docs/security/VERIFICATION_AUDIT_LOG.md) details all findings and patches.
-*   **Hybrid Memory (Planned):** We are planning the integration of ChromaDB as a long-term externalized memory layer, with reciprocal rank fusion (RRF) for advanced hybrid search capabilities.
+- **Architecture Documentation:** A detailed architectural overview, including structural diagrams and implementation logic, can be found in [docs/architecture.md](docs/architecture.md).
+- **Security Hardening:** Recent efforts have focused on addressing critical vulnerabilities (CVE-2026-25253, CVE-2026-25157) and enhancing skill sandbox validation. A comprehensive [Verification Audit Log](docs/security/VERIFICATION_AUDIT_LOG.md) details all findings and patches.
+- **Hybrid Memory (Planned):** We are planning the integration of ChromaDB as a long-term externalized memory layer, with reciprocal rank fusion (RRF) for advanced hybrid search capabilities.
 
 ## Development channels
 
@@ -485,7 +485,7 @@ Use these when you’re past the onboarding flow and want the deeper reference.
 
 ## Molty
 
-OpenClaw was built for **Molty**, a space lobster AI assistant. 🦞
+OpenClaw was built for **Molty**, a space lobster AI assistant.
 by Peter Steinberger and the community.
 
 - [openclaw.ai](https://openclaw.ai)

@@ -121,7 +121,7 @@ openclaw gateway --port 18789 --verbose
 Dashboard（local loopback）：`http://127.0.0.1:18789/`
 如果配置了令牌，将其粘贴到 Control UI 设置中（存储为 `connect.params.auth.token`）。
 
-⚠️ **Bun 警告（WhatsApp + Telegram）：**Bun 与这些渠道存在已知问题。如果你使用 WhatsApp 或 Telegram，请使用 **Node** 运行 Gateway 网关。
+[WARN] **Bun 警告（WhatsApp + Telegram）：**Bun 与这些渠道存在已知问题。如果你使用 WhatsApp 或 Telegram，请使用 **Node** 运行 Gateway 网关。
 
 ## 3.5) 快速验证（2 分钟）
 

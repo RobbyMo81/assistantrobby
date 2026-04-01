@@ -315,7 +315,7 @@ WhatsApp supports immediate ack reactions on inbound receipt via `channels.whats
   channels: {
     whatsapp: {
       ackReaction: {
-        emoji: "👀",
+        emoji: "",
         direct: true,
         group: "mentions", // always | mentions | never
       },

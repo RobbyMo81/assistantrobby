@@ -115,18 +115,18 @@ Discord 会阻止"特权意图"，除非你明确启用它们。
 
 **Scopes**
 
-- ✅ `bot`
-- ✅ `applications.commands`（原生命令所需）
+- [OK] `bot`
+- [OK] `applications.commands`（原生命令所需）
 
 **Bot Permissions**（最小基线）
 
-- ✅ View Channels
-- ✅ Send Messages
-- ✅ Read Message History
-- ✅ Embed Links
-- ✅ Attach Files
-- ✅ Add Reactions（可选但推荐）
-- ✅ Use External Emojis / Stickers（可选；仅当你需要时）
+- [OK] View Channels
+- [OK] Send Messages
+- [OK] Read Message History
+- [OK] Embed Links
+- [OK] Attach Files
+- [OK] Add Reactions（可选但推荐）
+- [OK] Use External Emojis / Stickers（可选；仅当你需要时）
 
 除非你在调试并完全信任机器人，否则避免使用 **Administrator**。
 
@@ -227,7 +227,7 @@ Discord 到处使用数字 ID；OpenClaw 配置优先使用 ID。
 - `requireMention` 必须位于 `channels.discord.guilds`（或特定频道）下。顶层的 `channels.discord.requireMention` 会被忽略。
 - **权限审计**（`channels status --probe`）只检查数字频道 ID。如果你使用 slug/名称作为 `channels.discord.guilds.*.channels` 键，审计无法验证权限。
 - **私信不工作**：`channels.discord.dm.enabled=false`、`channels.discord.dm.policy="disabled"`，或者你尚未被批准（`channels.discord.dm.policy="pairing"`）。
-- **Discord 中的执行审批**：Discord 支持私信中执行审批的**按钮 UI**（允许一次 / 始终允许 / 拒绝）。`/approve <id> ...` 仅用于转发的审批，不会解析 Discord 的按钮提示。如果你看到 `❌ Failed to submit approval: Error: unknown approval id` 或 UI 从未出现，请检查：
+- **Discord 中的执行审批**：Discord 支持私信中执行审批的**按钮 UI**（允许一次 / 始终允许 / 拒绝）。`/approve <id> ...` 仅用于转发的审批，不会解析 Discord 的按钮提示。如果你看到 `[FAIL] Failed to submit approval: Error: unknown approval id` 或 UI 从未出现，请检查：
   - 你的配置中有 `channels.discord.execApprovals.enabled: true`。
   - 你的 Discord 用户 ID 在 `channels.discord.execApprovals.approvers` 中列出（UI 仅发送给审批者）。
   - 使用私信提示中的按钮（**Allow once**、**Always allow**、**Deny**）。
@@ -459,7 +459,7 @@ Discord 到处使用数字 ID；OpenClaw 配置优先使用 ID。
 - `timeout`、`kick`、`ban`
 
 Discord 消息 ID 在注入的上下文中显示（`[discord message id: …]` 和历史行），以便智能体可以定位它们。
-表情可以是 unicode（例如 `✅`）或自定义表情语法如 `<:party_blob:1234567890>`。
+表情可以是 unicode（例如 `[OK]`）或自定义表情语法如 `<:party_blob:1234567890>`。
 
 ## 安全与运维
 

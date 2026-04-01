@@ -120,9 +120,10 @@ export async function rotateDeviceToken(
       const identity = await loadOrCreateDeviceIdentity();
       const role = res.role ?? params.role;
       if (res.deviceId === identity.deviceId || params.deviceId === identity.deviceId) {
-        storeDeviceAuthToken({
+        await storeDeviceAuthToken({
           deviceId: identity.deviceId,
           role,
+          keyMaterial: identity.privateKey,
           token: res.token,
           scopes: res.scopes ?? params.scopes ?? [],
         });
@@ -150,7 +151,7 @@ export async function revokeDeviceToken(
     await state.client.request("device.token.revoke", params);
     const identity = await loadOrCreateDeviceIdentity();
     if (params.deviceId === identity.deviceId) {
-      clearDeviceAuthToken({ deviceId: identity.deviceId, role: params.role });
+      await clearDeviceAuthToken({ deviceId: identity.deviceId, role: params.role });
     }
     await loadDevices(state);
   } catch (err) {

@@ -40,7 +40,7 @@ If the user is vague ("text my mom"), ask for the recipient handle or chat guid 
   "channel": "bluebubbles",
   "target": "+15551234567",
   "messageId": "<message-guid>",
-  "emoji": "❤️"
+  "emoji": ""
 }
 ```
 
@@ -52,7 +52,7 @@ If the user is vague ("text my mom"), ask for the recipient handle or chat guid 
   "channel": "bluebubbles",
   "target": "+15551234567",
   "messageId": "<message-guid>",
-  "emoji": "❤️",
+  "emoji": "",
   "remove": true
 }
 ```
